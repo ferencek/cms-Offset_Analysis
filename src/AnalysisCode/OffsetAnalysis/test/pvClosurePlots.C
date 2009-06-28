@@ -19,9 +19,9 @@ void style() {
 //    gStyle->SetLabelFont(42, "XYZ");
 }
 
-void closurePlot(const string& fFile0, const string& fFile1, const string& fFile2, const string& fFile3, const string& fFile4, const string& fPlot, const string& fTitleExt, const string& fNameExt, const string& fLegend) { 
+void closurePlot(const string& fFile0, const string& fFile1, const string& fFile2, const string& fFile3, const string& fPlot, const string& fTitleExt, const string& fNameExt, const string& fLegend) { 
  
-   TProfile *p[5];
+   TProfile *p[4];
     
    TFile file0(fFile0.c_str());
    TDirectoryFile *subDir = (TDirectoryFile*)file0.Get("closureAnalysis");
@@ -38,10 +38,6 @@ void closurePlot(const string& fFile0, const string& fFile1, const string& fFile
    TFile file3(fFile3.c_str());
    subDir = (TDirectoryFile*)file3.Get("closureAnalysis");
    p[3] = (TProfile*)subDir->Get(fPlot.c_str());
-   
-   TFile file4(fFile4.c_str());
-   subDir = (TDirectoryFile*)file4.Get("closureAnalysis");
-   p[4] = (TProfile*)subDir->Get(fPlot.c_str());
    
    string name = p[3]->GetName();
    string fileName = name + "__" + fNameExt + ".png";
@@ -79,23 +75,15 @@ void closurePlot(const string& fFile0, const string& fFile1, const string& fFile
    p[2]->SetMarkerStyle(22);
    p[2]->SetMarkerColor(kGreen+2);
    p[2]->Draw("same");
-   p[4]->SetLineWidth(2);
-   p[4]->SetLineColor(kCyan);
-   p[4]->SetMarkerSize(.8);
-   p[4]->SetMarkerStyle(27);
-   p[4]->SetMarkerColor(kCyan);
-   p[4]->Draw("same");
-
    
    TLegend *legend = new TLegend(.15,.74,.44,.89);
    legend->SetBorderSize(1);
    legend->SetFillColor(0);
    //legend->SetFillStyle(0);
    legend->AddEntry(p[1],fLegend.c_str(),"lp");
-   legend->AddEntry(p[4],(fLegend + " (corrected, PV, Lumi)").c_str(),"lp");
-   legend->AddEntry(p[2],(fLegend + " (corrected)").c_str(),"lp");
-   legend->AddEntry(p[3],(fLegend + " (corrected, PV)").c_str(),"lp");
-   legend->AddEntry(p[0],"QCD no noise","lp");
+   legend->AddEntry(p[3],(fLegend + " (corrected: PV, Lumi)").c_str(),"lp");
+   legend->AddEntry(p[2],(fLegend + " (corrected: Avg, Lumi)").c_str(),"lp");
+   legend->AddEntry(p[0],"QCD no offset","lp");
    legend->Draw();
   
 //    size_t n1 = fNameExt.find("ET");
@@ -185,9 +173,9 @@ void pvClosurePlot(const string& fFile0, const string& fFile1, const string& fFi
       legend->SetFillColor(0);
       //legend->SetFillStyle(0);
       legend->AddEntry(p[1],(fLegend + " (" + npv +")").c_str(),"lp");
-      legend->AddEntry(p[2],(fLegend + " (" + npv + ", corrected: Avg, Lumi)").c_str(),"lp");
+      legend->AddEntry(p[2],(fLegend + " (corrected: Avg, Lumi)").c_str(),"lp");
       legend->AddEntry(p[3],(fLegend + " (" + npv + ", corrected: PV, Lumi)").c_str(),"lp");
-      legend->AddEntry(p[0],"QCD no noise","lp");
+      legend->AddEntry(p[0],"QCD no offset","lp");
       legend->Draw();
       
       c->SetGridy();
@@ -403,21 +391,18 @@ void makePlots() {
    //********************************************
    // *** QCD ***
    string QCDpt15_NN = "root_files/closureAnalysis_QCDpt15_NN_ET0.5.root";
-   string QCDpt15_plus_1PU_F_P = "root_files/closureAnalysis_QCDpt15_plus_1PU_Full_Poisson_ET0.5.root";
-   string QCDpt15_plus_1PU_F_P_c = "root_files/closureAnalysis_QCDpt15_plus_1PU_Full_Poisson_corrected_ET0.5.root";
-   string QCDpt15_plus_1PU_F_P_c_a_l = "root_files/closureAnalysis_QCDpt15_plus_1PU_Full_Poisson_corrected_Avg_Lumi_ET0.5.root";
-   string QCDpt15_plus_1PU_F_P_c_pv_l = "root_files/closureAnalysis_QCDpt15_plus_1PU_Full_Poisson_corrected_PV_Lumi_ET0.5.root";
-   string QCDpt15_plus_1PU_F_P_c_pv = "root_files/closureAnalysis_QCDpt15_plus_1PU_Full_Poisson_corrected_PV_ET0.5.root";
-   string QCDpt15_plus_2PU_F_P = "root_files/closureAnalysis_QCDpt15_plus_2PU_Full_Poisson_ET0.5.root";
-   string QCDpt15_plus_2PU_F_P_c = "root_files/closureAnalysis_QCDpt15_plus_2PU_Full_Poisson_corrected_ET0.5.root";
-   string QCDpt15_plus_2PU_F_P_c_a_l = "root_files/closureAnalysis_QCDpt15_plus_2PU_Full_Poisson_corrected_Avg_Lumi_ET0.5.root";
-   string QCDpt15_plus_2PU_F_P_c_pv_l = "root_files/closureAnalysis_QCDpt15_plus_2PU_Full_Poisson_corrected_PV_Lumi_ET0.5.root";
-   string QCDpt15_plus_2PU_F_P_c_pv = "root_files/closureAnalysis_QCDpt15_plus_2PU_Full_Poisson_corrected_PV_ET0.5.root";
+   string QCDpt15_plus_1PU_F_P = "root_files/closureAnalysis_old_binning/closureAnalysis_QCDpt15_plus_1PU_Full_Poisson_ET0.5.root";
+   string QCDpt15_plus_1PU_F_P_c_a_l = "root_files/closureAnalysis_old_binning/closureAnalysis_QCDpt15_plus_1PU_Full_Poisson_corrected_Avg_Lumi_ET0.5.root";
+   string QCDpt15_plus_1PU_F_P_c_pv_l = "root_files/closureAnalysis_old_binning/closureAnalysis_QCDpt15_plus_1PU_Full_Poisson_corrected_PV_Lumi_ET0.5.root";
+//    string QCDpt15_plus_1PU_F_P_c_pv = "root_files/closureAnalysis_old_binning/closureAnalysis_QCDpt15_plus_1PU_Full_Poisson_corrected_PV_ET0.5.root";
+   string QCDpt15_plus_2PU_F_P = "root_files/closureAnalysis_old_binning/closureAnalysis_QCDpt15_plus_2PU_Full_Poisson_ET0.5.root";
+   string QCDpt15_plus_2PU_F_P_c_a_l = "root_files/closureAnalysis_old_binning/closureAnalysis_QCDpt15_plus_2PU_Full_Poisson_corrected_Avg_Lumi_ET0.5.root";
+   string QCDpt15_plus_2PU_F_P_c_pv_l = "root_files/closureAnalysis_old_binning/closureAnalysis_QCDpt15_plus_2PU_Full_Poisson_corrected_PV_Lumi_ET0.5.root";
+//    string QCDpt15_plus_2PU_F_P_c_pv = "root_files/closureAnalysis_old_binning/closureAnalysis_QCDpt15_plus_2PU_Full_Poisson_corrected_PV_ET0.5.root";
    string QCDpt15_plus_5PU_F_P = "root_files/closureAnalysis_QCDpt15_plus_5PU_Full_Poisson_ET0.5.root";
-   string QCDpt15_plus_5PU_F_P_c = "root_files/closureAnalysis_QCDpt15_plus_5PU_Full_Poisson_corrected_ET0.5.root";
    string QCDpt15_plus_5PU_F_P_c_a_l = "root_files/closureAnalysis_QCDpt15_plus_5PU_Full_Poisson_corrected_Avg_Lumi_ET0.5.root";
-   string QCDpt15_plus_5PU_F_P_c_pv_l = "root_files/closureAnalysis_QCDpt15_plus_5PU_Full_Poisson_corrected_PV_Lumi_ET0.5.root";
-   string QCDpt15_plus_5PU_F_P_c_pv = "root_files/closureAnalysis_QCDpt15_plus_5PU_Full_Poisson_corrected_PV_ET0.5.root";
+   string QCDpt15_plus_5PU_F_P_c_pv_l = "closureAnalysis_QCDpt15_plus_5PU_Full_Poisson_corrected_PV_Lumi_new_ET0.5.root";
+//    string QCDpt15_plus_5PU_F_P_c_pv = "root_files/closureAnalysis_old_binning/closureAnalysis_QCDpt15_plus_5PU_Full_Poisson_corrected_PV_ET0.5.root";
    //********************************************
    // make plots
    //********************************************
@@ -480,7 +465,7 @@ void makePlots() {
 //    closurePlot(QCDpt15_NN, QCDpt15_plus_5PU_F_P, QCDpt15_plus_5PU_F_P_c, QCDpt15_plus_5PU_F_P_c_pv, QCDpt15_plus_5PU_F_P_c_pv_l, "p_CaloJetpToverGenJetpT_pT_E", "  (CMSSW_2_1_8, IDEAL_V9)", "QCD_plus_5PU", "QCD+5PU");
 //    closurePlot(QCDpt15_NN, QCDpt15_plus_5PU_F_P, QCDpt15_plus_5PU_F_P_c, QCDpt15_plus_5PU_F_P_c_pv, QCDpt15_plus_5PU_F_P_c_pv_l, "p_CaloJetpToverGenJetpT_pT_F", "  (CMSSW_2_1_8, IDEAL_V9)", "QCD_plus_5PU", "QCD+5PU");
 //    closurePlot(QCDpt15_NN, QCDpt15_plus_5PU_F_P, QCDpt15_plus_5PU_F_P_c, QCDpt15_plus_5PU_F_P_c_pv, QCDpt15_plus_5PU_F_P_c_pv_l, "p_CaloJetpToverGenJetpT_eta_pT15_20", "  (CMSSW_2_1_8, IDEAL_V9)", "QCD_plus_5PU", "QCD+5PU");
-//    closurePlot(QCDpt15_NN, QCDpt15_plus_5PU_F_P, QCDpt15_plus_5PU_F_P_c, QCDpt15_plus_5PU_F_P_c_pv, QCDpt15_plus_5PU_F_P_c_pv_l, "p_CaloJetpToverGenJetpT_eta_pT20_25", "  (CMSSW_2_1_8, IDEAL_V9)", "QCD_plus_5PU", "QCD+5PU");
+   closurePlot(QCDpt15_NN, QCDpt15_plus_5PU_F_P, QCDpt15_plus_5PU_F_P_c_a_l, QCDpt15_plus_5PU_F_P_c_pv_l, "p_CaloJetpToverGenJetpT_eta_pT20_25", "  (CMSSW_2_1_8, IDEAL_V9)", "QCD_plus_5PU_new", "QCD+5PU");
 //    closurePlot(QCDpt15_NN, QCDpt15_plus_5PU_F_P, QCDpt15_plus_5PU_F_P_c, QCDpt15_plus_5PU_F_P_c_pv, QCDpt15_plus_5PU_F_P_c_pv_l, "p_CaloJetpToverGenJetpT_eta_pT25_30", "  (CMSSW_2_1_8, IDEAL_V9)", "QCD_plus_5PU", "QCD+5PU");
 //    closurePlot(QCDpt15_NN, QCDpt15_plus_5PU_F_P, QCDpt15_plus_5PU_F_P_c, QCDpt15_plus_5PU_F_P_c_pv, QCDpt15_plus_5PU_F_P_c_pv_l, "p_CaloJetpToverGenJetpT_eta_pT30_40", "  (CMSSW_2_1_8, IDEAL_V9)", "QCD_plus_5PU", "QCD+5PU");
 //    closurePlot(QCDpt15_NN, QCDpt15_plus_5PU_F_P, QCDpt15_plus_5PU_F_P_c, QCDpt15_plus_5PU_F_P_c_pv, QCDpt15_plus_5PU_F_P_c_pv_l, "p_CaloJetpToverGenJetpT_eta_pT40_50", "  (CMSSW_2_1_8, IDEAL_V9)", "QCD_plus_5PU", "QCD+5PU");
@@ -491,7 +476,7 @@ void makePlots() {
 //    pvClosurePlot(QCDpt15_NN, QCDpt15_plus_5PU_F_P, QCDpt15_plus_5PU_F_P_c_a_l, QCDpt15_plus_5PU_F_P_c_pv_l, 4,"p_CaloJetpToverGenJetpT_pT_B", "  (CMSSW_2_1_8, IDEAL_V9)", "QCD_plus_5PU", "QCD+5PU");
 //    pvClosurePlot(QCDpt15_NN, QCDpt15_plus_5PU_F_P, QCDpt15_plus_5PU_F_P_c_a_l, QCDpt15_plus_5PU_F_P_c_pv_l, 4,"p_CaloJetpToverGenJetpT_pT_E", "  (CMSSW_2_1_8, IDEAL_V9)", "QCD_plus_5PU", "QCD+5PU");
 //    pvClosurePlot(QCDpt15_NN, QCDpt15_plus_5PU_F_P, QCDpt15_plus_5PU_F_P_c_a_l, QCDpt15_plus_5PU_F_P_c_pv_l, 4,"p_CaloJetpToverGenJetpT_pT_F", "  (CMSSW_2_1_8, IDEAL_V9)", "QCD_plus_5PU", "QCD+5PU");
-//    pvClosurePlot(QCDpt15_NN, QCDpt15_plus_5PU_F_P, QCDpt15_plus_5PU_F_P_c_a_l, QCDpt15_plus_5PU_F_P_c_pv_l, 8,"p_CaloJetpToverGenJetpT_eta_pT15_20", "  (CMSSW_2_1_8, IDEAL_V9)", "QCD_plus_5PU", "QCD+5PU");
+//    pvClosurePlot(QCDpt15_NN, QCDpt15_plus_5PU_F_P, QCDpt15_plus_5PU_F_P_c_a_l, QCDpt15_plus_5PU_F_P_c_pv_l, 4,"p_CaloJetpToverGenJetpT_eta_pT15_20", "  (CMSSW_2_1_8, IDEAL_V9)", "QCD_plus_5PU", "QCD+5PU");
 //    pvClosurePlot(QCDpt15_NN, QCDpt15_plus_5PU_F_P, QCDpt15_plus_5PU_F_P_c_a_l, QCDpt15_plus_5PU_F_P_c_pv_l, 4,"p_CaloJetpToverGenJetpT_eta_pT20_25", "  (CMSSW_2_1_8, IDEAL_V9)", "QCD_plus_5PU", "QCD+5PU");
 //    pvClosurePlot(QCDpt15_NN, QCDpt15_plus_5PU_F_P, QCDpt15_plus_5PU_F_P_c_a_l, QCDpt15_plus_5PU_F_P_c_pv_l, 4,"p_CaloJetpToverGenJetpT_eta_pT25_30", "  (CMSSW_2_1_8, IDEAL_V9)", "QCD_plus_5PU", "QCD+5PU");
 //    pvClosurePlot(QCDpt15_NN, QCDpt15_plus_5PU_F_P, QCDpt15_plus_5PU_F_P_c_a_l, QCDpt15_plus_5PU_F_P_c_pv_l, 4,"p_CaloJetpToverGenJetpT_eta_pT30_40", "  (CMSSW_2_1_8, IDEAL_V9)", "QCD_plus_5PU", "QCD+5PU");
@@ -505,12 +490,12 @@ void makePlots() {
 //    dividePlots(QCDpt15_NN, QCDpt15_plus_1PU, QCDpt15_plus_2PU, QCDpt15_plus_5PU, QCDpt15_plus_1PU_c, QCDpt15_plus_2PU_c, QCDpt15_plus_5PU_c, "p_CaloJetpToverGenJetpT_eta_pT25_30", "QCDnPUoverQCDNN");
 //    dividePlots(QCDpt15_NN, QCDpt15_plus_1PU, QCDpt15_plus_2PU, QCDpt15_plus_5PU, QCDpt15_plus_1PU_c, QCDpt15_plus_2PU_c, QCDpt15_plus_5PU_c, "p_CaloJetpToverGenJetpT_eta_pT15_20", "QCDnPUoverQCDNN");
 
-   pvDividePlots(QCDpt15_NN, QCDpt15_plus_1PU_F_P, QCDpt15_plus_1PU_F_P_c_pv_l, 2, "p_CaloJetpToverGenJetpT_eta_pT15_20", "QCD1PUoverQCDNN","QCD+1PU");
-   pvDividePlots(QCDpt15_NN, QCDpt15_plus_2PU_F_P, QCDpt15_plus_2PU_F_P_c_pv_l, 4, "p_CaloJetpToverGenJetpT_eta_pT15_20", "QCD2PUoverQCDNN","QCD+2PU");
-   pvDividePlots(QCDpt15_NN, QCDpt15_plus_5PU_F_P, QCDpt15_plus_5PU_F_P_c_pv_l, 5, "p_CaloJetpToverGenJetpT_eta_pT15_20", "QCD5PUoverQCDNN","QCD+5PU");
-   
-   pvDividePlots(QCDpt15_NN, QCDpt15_plus_1PU_F_P, QCDpt15_plus_1PU_F_P_c_pv_l, 2, "p_CaloJetpToverGenJetpT_eta_pT20_25", "QCD1PUoverQCDNN","QCD+1PU");
-   pvDividePlots(QCDpt15_NN, QCDpt15_plus_2PU_F_P, QCDpt15_plus_2PU_F_P_c_pv_l, 4, "p_CaloJetpToverGenJetpT_eta_pT20_25", "QCD2PUoverQCDNN","QCD+2PU");
-   pvDividePlots(QCDpt15_NN, QCDpt15_plus_5PU_F_P, QCDpt15_plus_5PU_F_P_c_pv_l, 5, "p_CaloJetpToverGenJetpT_eta_pT20_25", "QCD5PUoverQCDNN","QCD+5PU");
+//    pvDividePlots(QCDpt15_NN, QCDpt15_plus_1PU_F_P, QCDpt15_plus_1PU_F_P_c_pv_l, 2, "p_CaloJetpToverGenJetpT_eta_pT15_20", "QCD1PUoverQCDNN","QCD+1PU");
+//    pvDividePlots(QCDpt15_NN, QCDpt15_plus_2PU_F_P, QCDpt15_plus_2PU_F_P_c_pv_l, 4, "p_CaloJetpToverGenJetpT_eta_pT15_20", "QCD2PUoverQCDNN","QCD+2PU");
+//    pvDividePlots(QCDpt15_NN, QCDpt15_plus_5PU_F_P, QCDpt15_plus_5PU_F_P_c_pv_l, 5, "p_CaloJetpToverGenJetpT_eta_pT15_20", "QCD5PUoverQCDNN","QCD+5PU");
+
+//    pvDividePlots(QCDpt15_NN, QCDpt15_plus_1PU_F_P, QCDpt15_plus_1PU_F_P_c_pv_l, 2, "p_CaloJetpToverGenJetpT_eta_pT20_25", "QCD1PUoverQCDNN","QCD+1PU");
+//    pvDividePlots(QCDpt15_NN, QCDpt15_plus_2PU_F_P, QCDpt15_plus_2PU_F_P_c_pv_l, 4, "p_CaloJetpToverGenJetpT_eta_pT20_25", "QCD2PUoverQCDNN","QCD+2PU");
+//    pvDividePlots(QCDpt15_NN, QCDpt15_plus_5PU_F_P, QCDpt15_plus_5PU_F_P_c_pv_l, 5, "p_CaloJetpToverGenJetpT_eta_pT20_25", "QCD5PUoverQCDNN","QCD+5PU");
 
 }

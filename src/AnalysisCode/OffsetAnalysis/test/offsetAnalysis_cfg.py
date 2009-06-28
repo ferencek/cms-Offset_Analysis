@@ -14,13 +14,13 @@ process.MessageLogger.cerr.default.limit = 10
 process.MessageLogger.cerr.FwkReport.reportEvery = 500
 
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(20000)
+    input = cms.untracked.int32(-1)
 )
 
-process.load("AnalysisCode.OffsetAnalysis.PoolSource_1PU_InTime_Fixed_cfi")
+process.load("AnalysisCode.OffsetAnalysis.PoolSource_5PU_Full_Poisson_cfi")
 
 process.TFileService = cms.Service("TFileService",
-    fileName = cms.string('offlinePrimaryVertices_1PU_InTime_Fixed.root')
+    fileName = cms.string('5PU_Full_Poisson_ET0.5.root')
 )
 
 process.offsetAnalysis = cms.EDAnalyzer("OffsetAnalysis",
@@ -29,8 +29,8 @@ process.offsetAnalysis = cms.EDAnalyzer("OffsetAnalysis",
     #caloTowers = cms.untracked.string('towerMakerAlt'),
     loopOverRecHits = cms.untracked.bool(False),
     recHitEvtLimit = cms.untracked.int32(2000),
-    doPVs = cms.untracked.bool(True),
-    maxNPVs = cms.untracked.int32(5),
+    doPVs = cms.untracked.bool(False),
+    maxNPVs = cms.untracked.int32(0),
     pvCollection = cms.InputTag('offlinePrimaryVertices'),
     savePlots = cms.untracked.bool(False),
     outputDir = cms.untracked.string('plots'),

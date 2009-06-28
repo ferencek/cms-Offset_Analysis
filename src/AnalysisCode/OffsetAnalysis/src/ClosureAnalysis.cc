@@ -114,22 +114,22 @@ class ClosureAnalysis : public edm::EDAnalyzer {
       TH2F *h_CaloJetpToverGenJetpT_pT_F;
       TProfile *p_CaloJetpToverGenJetpT_eta_pT15_20;
       TProfile *p_CaloJetpToverGenJetpT_eta_pT20_25;
-      TProfile *p_CaloJetpToverGenJetpT_eta_pT25_30;
-      TProfile *p_CaloJetpToverGenJetpT_eta_pT30_40;
-      TProfile *p_CaloJetpToverGenJetpT_eta_pT40_50;
-      TProfile *p_CaloJetpToverGenJetpT_eta_pT50_70;
-      TProfile *p_CaloJetpToverGenJetpT_eta_pT70_100;
+      TProfile *p_CaloJetpToverGenJetpT_eta_pT25_40;
+      TProfile *p_CaloJetpToverGenJetpT_eta_pT40_60;
+      TProfile *p_CaloJetpToverGenJetpT_eta_pT60_100;
+//       TProfile *p_CaloJetpToverGenJetpT_eta_pT50_70;
+//       TProfile *p_CaloJetpToverGenJetpT_eta_pT70_100;
       TProfile *p_CaloJetEoverGenJetE_pT;
       TProfile *p_CaloJetEoverGenJetE_pT_B;
       TProfile *p_CaloJetEoverGenJetE_pT_E;
       TProfile *p_CaloJetEoverGenJetE_pT_F;
       TProfile *p_CaloJetEoverGenJetE_eta_pT15_20;
       TProfile *p_CaloJetEoverGenJetE_eta_pT20_25;
-      TProfile *p_CaloJetEoverGenJetE_eta_pT25_30;
-      TProfile *p_CaloJetEoverGenJetE_eta_pT30_40;
-      TProfile *p_CaloJetEoverGenJetE_eta_pT40_50;
-      TProfile *p_CaloJetEoverGenJetE_eta_pT50_70;
-      TProfile *p_CaloJetEoverGenJetE_eta_pT70_100;
+      TProfile *p_CaloJetEoverGenJetE_eta_pT25_40;
+      TProfile *p_CaloJetEoverGenJetE_eta_pT40_60;
+      TProfile *p_CaloJetEoverGenJetE_eta_pT60_100;
+//       TProfile *p_CaloJetEoverGenJetE_eta_pT50_70;
+//       TProfile *p_CaloJetEoverGenJetE_eta_pT70_100;
       
       map<int, TH2F*> h_CaloJetpToverGenJetpT_pT_NPV;
       map<int, TProfile*> p_CaloJetpToverGenJetpT_pT_NPV;
@@ -207,41 +207,40 @@ ClosureAnalysis::beginJob(const edm::EventSetup&)
    if ( doCorr_ ) minNPVs = 1; // offset correction for QCD+PU with NPV=0 does not exist
 
    // book all histograms
-   h_CaloJetEta = fs->make<TH1F>("h_CaloJetEta",";#eta^{calo};Entries/0.2",50,-5.,5.);
+   h_CaloJetEta = fs->make<TH1F>("h_CaloJetEta",";#eta;Entries/0.2",50,-5.,5.);
    h_GenJetpT   = fs->make<TH1F>("h_GenJetpT",";p_{T}^{gen} [GeV/c];Entries/(1 GeV/c)",100,0.,100.);
    h_CaloCaloDeltaR = fs->make<TH1F>("h_CaloCaloDeltaR","#DeltaR(CaloJet_{i},CaloJet_{j});#DeltaR;Entries/0.02",100,0.,2.);
    h_CaloGenDeltaR  = fs->make<TH1F>("h_CaloGenDeltaR","#DeltaR(CaloJet_{i},GenJet_{j});#DeltaR;Entries/0.02",100,0.,2.);
    h_GenJetMatches  = fs->make<TH1F>("h_GenMatches","# of GenJets with #DeltaR<0.25;# of GenJets;Entries",4,-0.5,3.5);
-   float Xbins[8] = {15,20,25,30,40,50,70,100};
+   float pTbins[6] = {15,20,25,40,60,100};
+   float etaBins[21] = {-5,-4,-3.5,-3,-2.5,-2,-1.5,-1.3,-1,-.5,0,.5,1,1.3,1.5,2,2.5,3,3.5,4,5};
+   
    // CaloJetpT/GenJetpT histograms
    h_CaloJetpToverGenJetpT_pT = fs->make<TH2F>("h_CaloJetpToverGenJetpT_pT",";p_{T}^{gen} [GeV/c];p_{T}^{calo}/p_{T}^{gen}",100,0.,100.,150,0.,1.5);
-   p_CaloJetpToverGenJetpT_pT = fs->make<TProfile>("p_CaloJetpToverGenJetpT_pT",";p_{T}^{gen} [GeV/c];<p_{T}^{calo}/p_{T}^{gen}>",7,Xbins);
-   h_CaloJetpToverGenJetpT_pT_B = fs->make<TH2F>("h_CaloJetpToverGenJetpT_pT_B","|#eta^{calo}|<1.3;p_{T}^{gen} [GeV/c];p_{T}^{calo}/p_{T}^{gen}",100,0.,100.,150,0.,1.5);
-   p_CaloJetpToverGenJetpT_pT_B = fs->make<TProfile>("p_CaloJetpToverGenJetpT_pT_B","|#eta^{calo}|<1.3;p_{T}^{gen} [GeV/c];<p_{T}^{calo}/p_{T}^{gen}>",7,Xbins);
-   h_CaloJetpToverGenJetpT_pT_E = fs->make<TH2F>("h_CaloJetpToverGenJetpT_pT_E","1.3<|#eta^{calo}|<2.8;p_{T}^{gen} [GeV/c];p_{T}^{calo}/p_{T}^{gen}",100,0.,100.,150,0.,1.5);
-   p_CaloJetpToverGenJetpT_pT_E = fs->make<TProfile>("p_CaloJetpToverGenJetpT_pT_E","1.3<|#eta^{calo}|<2.8;p_{T}^{gen} [GeV/c];<p_{T}^{calo}/p_{T}^{gen}>",7,Xbins);
-   h_CaloJetpToverGenJetpT_pT_F = fs->make<TH2F>("h_CaloJetpToverGenJetpT_pT_F","|#eta^{calo}|>2.8;p_{T}^{gen} [GeV/c];p_{T}^{calo}/p_{T}^{gen}",100,0.,100.,150,0.,1.5);
-   p_CaloJetpToverGenJetpT_pT_F = fs->make<TProfile>("p_CaloJetpToverGenJetpT_pT_F","|#eta^{calo}|>2.8;p_{T}^{gen} [GeV/c];<p_{T}^{calo}/p_{T}^{gen}>",7,Xbins);
-   p_CaloJetpToverGenJetpT_eta_pT15_20 = fs->make<TProfile>("p_CaloJetpToverGenJetpT_eta_pT15_20","15<p_{T}^{gen}<20 GeV/c;#eta^{calo};<p_{T}^{calo}/p_{T}^{gen}>",50,-5.,5.);
-   p_CaloJetpToverGenJetpT_eta_pT20_25 = fs->make<TProfile>("p_CaloJetpToverGenJetpT_eta_pT20_25","20<p_{T}^{gen}<25 GeV/c;#eta^{calo};<p_{T}^{calo}/p_{T}^{gen}>",50,-5.,5.);
-   p_CaloJetpToverGenJetpT_eta_pT25_30 = fs->make<TProfile>("p_CaloJetpToverGenJetpT_eta_pT25_30","25<p_{T}^{gen}<30 GeV/c;#eta^{calo};<p_{T}^{calo}/p_{T}^{gen}>",50,-5.,5.);
-   p_CaloJetpToverGenJetpT_eta_pT30_40 = fs->make<TProfile>("p_CaloJetpToverGenJetpT_eta_pT30_40","30<p_{T}^{gen}<40 GeV/c;#eta^{calo};<p_{T}^{calo}/p_{T}^{gen}>",50,-5.,5.);
-   p_CaloJetpToverGenJetpT_eta_pT40_50 = fs->make<TProfile>("p_CaloJetpToverGenJetpT_eta_pT40_50","40<p_{T}^{gen}<50 GeV/c;#eta^{calo};<p_{T}^{calo}/p_{T}^{gen}>",50,-5.,5.);
-   p_CaloJetpToverGenJetpT_eta_pT50_70 = fs->make<TProfile>("p_CaloJetpToverGenJetpT_eta_pT50_70","50<p_{T}^{gen}<70 GeV/c;#eta^{calo};<p_{T}^{calo}/p_{T}^{gen}>",50,-5.,5.);
-   p_CaloJetpToverGenJetpT_eta_pT70_100 = fs->make<TProfile>("p_CaloJetpToverGenJetpT_eta_pT70_100","70<p_{T}^{gen}<100 GeV/c;#eta^{calo};<p_{T}^{calo}/p_{T}^{gen}>",50,-5.,5.);
-   // CaloJetE/GenJetE histograms
-   p_CaloJetEoverGenJetE_pT = fs->make<TProfile>("p_CaloJetEoverGenJetE_pT","<E^{calo}/E^{gen}>;p_{T}^{gen} [GeV/c]",7,Xbins);
-   p_CaloJetEoverGenJetE_pT_B = fs->make<TProfile>("p_CaloJetEoverGenJetE_pT_B","|#eta^{calo}|<1.3;p_{T}^{gen} [GeV/c];<E^{calo}/E^{gen}>",7,Xbins);
-   p_CaloJetEoverGenJetE_pT_E = fs->make<TProfile>("p_CaloJetEoverGenJetE_pT_E","1.3<|#eta^{calo}|<2.8;p_{T}^{gen} [GeV/c];<E^{calo}/E^{gen}>",7,Xbins);
-   p_CaloJetEoverGenJetE_pT_F = fs->make<TProfile>("p_CaloJetEoverGenJetE_pT_F","|#eta^{calo}|>2.8;p_{T}^{gen} [GeV/c];<E^{calo}/E^{gen}>",7,Xbins);
-   p_CaloJetEoverGenJetE_eta_pT15_20 = fs->make<TProfile>("p_CaloJetEoverGenJetE_eta_pT15_20","15<p_{T}^{gen}<20 GeV/c;#eta^{calo};<E^{calo}/E^{gen}>",50,-5.,5.);
-   p_CaloJetEoverGenJetE_eta_pT20_25 = fs->make<TProfile>("p_CaloJetEoverGenJetE_eta_pT20_25","20<p_{T}^{gen}<25 GeV/c;#eta^{calo};<E^{calo}/E^{gen}>",50,-5.,5.);
-   p_CaloJetEoverGenJetE_eta_pT25_30 = fs->make<TProfile>("p_CaloJetEoverGenJetE_eta_pT25_30","25<p_{T}^{gen}<30 GeV/c;#eta^{calo};<E^{calo}/E^{gen}>",50,-5.,5.);
-   p_CaloJetEoverGenJetE_eta_pT30_40 = fs->make<TProfile>("p_CaloJetEoverGenJetE_eta_pT30_40","30<p_{T}^{gen}<40 GeV/c;#eta^{calo};<E^{calo}/E^{gen}>",50,-5.,5.);
-   p_CaloJetEoverGenJetE_eta_pT40_50 = fs->make<TProfile>("p_CaloJetEoverGenJetE_eta_pT40_50","40<p_{T}^{gen}<50 GeV/c;#eta^{calo};<E^{calo}/E^{gen}>",50,-5.,5.);
-   p_CaloJetEoverGenJetE_eta_pT50_70 = fs->make<TProfile>("p_CaloJetEoverGenJetE_eta_pT50_70","50<p_{T}^{gen}<70 GeV/c;#eta^{calo};<E^{calo}/E^{gen}>",50,-5.,5.);
-   p_CaloJetEoverGenJetE_eta_pT70_100 = fs->make<TProfile>("p_CaloJetEoverGenJetE_eta_pT70_100","70<p_{T}^{gen}<100 GeV/c;#eta^{calo};<E^{calo}/E^{gen}>",50,-5.,5.);
+   p_CaloJetpToverGenJetpT_pT = fs->make<TProfile>("p_CaloJetpToverGenJetpT_pT",";p_{T}^{gen} [GeV/c];<p_{T}^{calo}/p_{T}^{gen}>",5,pTbins);
+   h_CaloJetpToverGenJetpT_pT_B = fs->make<TH2F>("h_CaloJetpToverGenJetpT_pT_B","|#eta|<1.3;p_{T}^{gen} [GeV/c];p_{T}^{calo}/p_{T}^{gen}",100,0.,100.,150,0.,1.5);
+   p_CaloJetpToverGenJetpT_pT_B = fs->make<TProfile>("p_CaloJetpToverGenJetpT_pT_B","|#eta|<1.3;p_{T}^{gen} [GeV/c];<p_{T}^{calo}/p_{T}^{gen}>",5,pTbins);
+   h_CaloJetpToverGenJetpT_pT_E = fs->make<TH2F>("h_CaloJetpToverGenJetpT_pT_E","1.3<|#eta|<2.8;p_{T}^{gen} [GeV/c];p_{T}^{calo}/p_{T}^{gen}",100,0.,100.,150,0.,1.5);
+   p_CaloJetpToverGenJetpT_pT_E = fs->make<TProfile>("p_CaloJetpToverGenJetpT_pT_E","1.3<|#eta|<2.8;p_{T}^{gen} [GeV/c];<p_{T}^{calo}/p_{T}^{gen}>",5,pTbins);
+   h_CaloJetpToverGenJetpT_pT_F = fs->make<TH2F>("h_CaloJetpToverGenJetpT_pT_F","|#eta|>2.8;p_{T}^{gen} [GeV/c];p_{T}^{calo}/p_{T}^{gen}",100,0.,100.,150,0.,1.5);
+   p_CaloJetpToverGenJetpT_pT_F = fs->make<TProfile>("p_CaloJetpToverGenJetpT_pT_F","|#eta|>2.8;p_{T}^{gen} [GeV/c];<p_{T}^{calo}/p_{T}^{gen}>",5,pTbins);
+   p_CaloJetpToverGenJetpT_eta_pT15_20 = fs->make<TProfile>("p_CaloJetpToverGenJetpT_eta_pT15_20","15<p_{T}^{gen}<20 GeV/c;#eta;<p_{T}^{calo}/p_{T}^{gen}>",20,etaBins);
+   p_CaloJetpToverGenJetpT_eta_pT20_25 = fs->make<TProfile>("p_CaloJetpToverGenJetpT_eta_pT20_25","20<p_{T}^{gen}<25 GeV/c;#eta;<p_{T}^{calo}/p_{T}^{gen}>",20,etaBins);
+   p_CaloJetpToverGenJetpT_eta_pT25_40 = fs->make<TProfile>("p_CaloJetpToverGenJetpT_eta_pT25_40","25<p_{T}^{gen}<40 GeV/c;#eta;<p_{T}^{calo}/p_{T}^{gen}>",20,etaBins);
+   p_CaloJetpToverGenJetpT_eta_pT40_60 = fs->make<TProfile>("p_CaloJetpToverGenJetpT_eta_pT40_60","40<p_{T}^{gen}<60 GeV/c;#eta;<p_{T}^{calo}/p_{T}^{gen}>",20,etaBins);
+   p_CaloJetpToverGenJetpT_eta_pT60_100 = fs->make<TProfile>("p_CaloJetpToverGenJetpT_eta_pT60_100","60<p_{T}^{gen}<100 GeV/c;#eta;<p_{T}^{calo}/p_{T}^{gen}>",20,etaBins);
    
+   // CaloJetE/GenJetE histograms
+   p_CaloJetEoverGenJetE_pT = fs->make<TProfile>("p_CaloJetEoverGenJetE_pT",";p_{T}^{gen} [GeV/c];<E^{calo}/E^{gen}>",5,pTbins);
+   p_CaloJetEoverGenJetE_pT_B = fs->make<TProfile>("p_CaloJetEoverGenJetE_pT_B","|#eta|<1.3;p_{T}^{gen} [GeV/c];<E^{calo}/E^{gen}>",5,pTbins);
+   p_CaloJetEoverGenJetE_pT_E = fs->make<TProfile>("p_CaloJetEoverGenJetE_pT_E","1.3<|#eta|<2.8;p_{T}^{gen} [GeV/c];<E^{calo}/E^{gen}>",5,pTbins);
+   p_CaloJetEoverGenJetE_pT_F = fs->make<TProfile>("p_CaloJetEoverGenJetE_pT_F","|#eta|>2.8;p_{T}^{gen} [GeV/c];<E^{calo}/E^{gen}>",5,pTbins);
+   p_CaloJetEoverGenJetE_eta_pT15_20 = fs->make<TProfile>("p_CaloJetEoverGenJetE_eta_pT15_20","15<p_{T}^{gen}<20 GeV/c;#eta;<E^{calo}/E^{gen}>",20,etaBins);
+   p_CaloJetEoverGenJetE_eta_pT20_25 = fs->make<TProfile>("p_CaloJetEoverGenJetE_eta_pT20_25","20<p_{T}^{gen}<25 GeV/c;#eta;<E^{calo}/E^{gen}>",20,etaBins);
+   p_CaloJetEoverGenJetE_eta_pT25_40 = fs->make<TProfile>("p_CaloJetEoverGenJetE_eta_pT25_40","25<p_{T}^{gen}<40 GeV/c;#eta;<E^{calo}/E^{gen}>",20,etaBins);
+   p_CaloJetEoverGenJetE_eta_pT40_60 = fs->make<TProfile>("p_CaloJetEoverGenJetE_eta_pT40_60","40<p_{T}^{gen}<60 GeV/c;#eta;<E^{calo}/E^{gen}>",20,etaBins);
+   p_CaloJetEoverGenJetE_eta_pT60_100 = fs->make<TProfile>("p_CaloJetEoverGenJetE_eta_pT60_100","60<p_{T}^{gen}<100 GeV/c;#eta;<E^{calo}/E^{gen}>",20,etaBins);
+      
    // PV dependent CaloJetpT/GenJetpT histograms
    if ( doPVs_ ) {
       TFileDirectory pvSubDir = fs->mkdir( "PVDependent" );
@@ -254,20 +253,20 @@ ClosureAnalysis::beginJob(const edm::EventSetup&)
          sprintf (NPVs, "%i", i);
          
          h_CaloJetpToverGenJetpT_pT_NPV[i] = pvSubDir.make<TH2F>(("h_" + name + "_pT_NPV" + NPVs).c_str(),";p_{T}^{gen} [GeV/c];p_{T}^{calo}/p_{T}^{gen}",100,0.,100.,150,0.,1.5);
-         p_CaloJetpToverGenJetpT_pT_NPV[i] = pvSubDir.make<TProfile>(("p_" + name + "_pT_NPV" + NPVs).c_str(),";p_{T}^{gen} [GeV/c];<p_{T}^{calo}/p_{T}^{gen}>",7,Xbins);
-         h_CaloJetpToverGenJetpT_pT_B_NPV[i] = pvSubDir.make<TH2F>(("h_" + name + "_pT_B_NPV" + NPVs).c_str(),"|#eta^{calo}|<1.3;p_{T}^{gen} [GeV/c];p_{T}^{calo}/p_{T}^{gen}",100,0.,100.,150,0.,1.5);
-         p_CaloJetpToverGenJetpT_pT_B_NPV[i] = pvSubDir.make<TProfile>(("p_" + name + "_pT_B_NPV" + NPVs).c_str(),"|#eta^{calo}|<1.3;p_{T}^{gen} [GeV/c];<p_{T}^{calo}/p_{T}^{gen}>",7,Xbins);
-         h_CaloJetpToverGenJetpT_pT_E_NPV[i] = pvSubDir.make<TH2F>(("h_" + name + "_pT_E_NPV" + NPVs).c_str(),"1.3<|#eta^{calo}|<2.8;p_{T}^{gen} [GeV/c];p_{T}^{calo}/p_{T}^{gen}",100,0.,100.,150,0.,1.5);
-         p_CaloJetpToverGenJetpT_pT_E_NPV[i] = pvSubDir.make<TProfile>(("p_" + name + "_pT_E_NPV" + NPVs).c_str(),"1.3<|#eta^{calo}|<2.8;p_{T}^{gen} [GeV/c];<p_{T}^{calo}/p_{T}^{gen}>",7,Xbins);
-         h_CaloJetpToverGenJetpT_pT_F_NPV[i] = pvSubDir.make<TH2F>(("h_" + name + "_pT_F_NPV" + NPVs).c_str(),"|#eta^{calo}|>2.8;p_{T}^{gen} [GeV/c];p_{T}^{calo}/p_{T}^{gen}",100,0.,100.,150,0.,1.5);
-         p_CaloJetpToverGenJetpT_pT_F_NPV[i] = pvSubDir.make<TProfile>(("p_" + name + "_pT_F_NPV" + NPVs).c_str(),"|#eta^{calo}|>2.8;p_{T}^{gen} [GeV/c];<p_{T}^{calo}/p_{T}^{gen}>",7,Xbins);
-         p_CaloJetpToverGenJetpT_eta_pT15_20_NPV[i] = pvSubDir.make<TProfile>(("p_" + name + "_eta_pT15_20_NPV" + NPVs).c_str(),"15<p_{T}^{gen}<20 GeV/c;#eta^{calo};<p_{T}^{calo}/p_{T}^{gen}>",50,-5.,5.);
-         p_CaloJetpToverGenJetpT_eta_pT20_25_NPV[i] = pvSubDir.make<TProfile>(("p_" + name + "_eta_pT20_25_NPV" + NPVs).c_str(),"20<p_{T}^{gen}<25 GeV/c;#eta^{calo};<p_{T}^{calo}/p_{T}^{gen}>",50,-5.,5.);
-         p_CaloJetpToverGenJetpT_eta_pT25_30_NPV[i] = pvSubDir.make<TProfile>(("p_" + name + "_eta_pT25_30_NPV" + NPVs).c_str(),"25<p_{T}^{gen}<30 GeV/c;#eta^{calo};<p_{T}^{calo}/p_{T}^{gen}>",50,-5.,5.);
-         p_CaloJetpToverGenJetpT_eta_pT30_40_NPV[i] = pvSubDir.make<TProfile>(("p_" + name + "_eta_pT30_40_NPV" + NPVs).c_str(),"30<p_{T}^{gen}<40 GeV/c;#eta^{calo};<p_{T}^{calo}/p_{T}^{gen}>",50,-5.,5.);
-         p_CaloJetpToverGenJetpT_eta_pT40_50_NPV[i] = pvSubDir.make<TProfile>(("p_" + name + "_eta_pT40_50_NPV" + NPVs).c_str(),"40<p_{T}^{gen}<50 GeV/c;#eta^{calo};<p_{T}^{calo}/p_{T}^{gen}>",50,-5.,5.);
-         p_CaloJetpToverGenJetpT_eta_pT50_70_NPV[i] = pvSubDir.make<TProfile>(("p_" + name + "_eta_pT50_70_NPV" + NPVs).c_str(),"50<p_{T}^{gen}<70 GeV/c;#eta^{calo};<p_{T}^{calo}/p_{T}^{gen}>",50,-5.,5.);
-         p_CaloJetpToverGenJetpT_eta_pT70_100_NPV[i] = pvSubDir.make<TProfile>(("p_" + name + "_eta_pT70_100_NPV" + NPVs).c_str(),"70<p_{T}^{gen}<100 GeV/c;#eta^{calo};<p_{T}^{calo}/p_{T}^{gen}>",50,-5.,5.);
+         p_CaloJetpToverGenJetpT_pT_NPV[i] = pvSubDir.make<TProfile>(("p_" + name + "_pT_NPV" + NPVs).c_str(),";p_{T}^{gen} [GeV/c];<p_{T}^{calo}/p_{T}^{gen}>",5,pTbins);
+         h_CaloJetpToverGenJetpT_pT_B_NPV[i] = pvSubDir.make<TH2F>(("h_" + name + "_pT_B_NPV" + NPVs).c_str(),"|#eta|<1.3;p_{T}^{gen} [GeV/c];p_{T}^{calo}/p_{T}^{gen}",100,0.,100.,150,0.,1.5);
+         p_CaloJetpToverGenJetpT_pT_B_NPV[i] = pvSubDir.make<TProfile>(("p_" + name + "_pT_B_NPV" + NPVs).c_str(),"|#eta|<1.3;p_{T}^{gen} [GeV/c];<p_{T}^{calo}/p_{T}^{gen}>",5,pTbins);
+         h_CaloJetpToverGenJetpT_pT_E_NPV[i] = pvSubDir.make<TH2F>(("h_" + name + "_pT_E_NPV" + NPVs).c_str(),"1.3<|#eta|<2.8;p_{T}^{gen} [GeV/c];p_{T}^{calo}/p_{T}^{gen}",100,0.,100.,150,0.,1.5);
+         p_CaloJetpToverGenJetpT_pT_E_NPV[i] = pvSubDir.make<TProfile>(("p_" + name + "_pT_E_NPV" + NPVs).c_str(),"1.3<|#eta|<2.8;p_{T}^{gen} [GeV/c];<p_{T}^{calo}/p_{T}^{gen}>",5,pTbins);
+         h_CaloJetpToverGenJetpT_pT_F_NPV[i] = pvSubDir.make<TH2F>(("h_" + name + "_pT_F_NPV" + NPVs).c_str(),"|#eta|>2.8;p_{T}^{gen} [GeV/c];p_{T}^{calo}/p_{T}^{gen}",100,0.,100.,150,0.,1.5);
+         p_CaloJetpToverGenJetpT_pT_F_NPV[i] = pvSubDir.make<TProfile>(("p_" + name + "_pT_F_NPV" + NPVs).c_str(),"|#eta|>2.8;p_{T}^{gen} [GeV/c];<p_{T}^{calo}/p_{T}^{gen}>",5,pTbins);
+         p_CaloJetpToverGenJetpT_eta_pT15_20_NPV[i] = pvSubDir.make<TProfile>(("p_" + name + "_eta_pT15_20_NPV" + NPVs).c_str(),"15<p_{T}^{gen}<20 GeV/c;#eta;<p_{T}^{calo}/p_{T}^{gen}>",50,-5.,5.);
+         p_CaloJetpToverGenJetpT_eta_pT20_25_NPV[i] = pvSubDir.make<TProfile>(("p_" + name + "_eta_pT20_25_NPV" + NPVs).c_str(),"20<p_{T}^{gen}<25 GeV/c;#eta;<p_{T}^{calo}/p_{T}^{gen}>",50,-5.,5.);
+         p_CaloJetpToverGenJetpT_eta_pT25_30_NPV[i] = pvSubDir.make<TProfile>(("p_" + name + "_eta_pT25_30_NPV" + NPVs).c_str(),"25<p_{T}^{gen}<30 GeV/c;#eta;<p_{T}^{calo}/p_{T}^{gen}>",50,-5.,5.);
+         p_CaloJetpToverGenJetpT_eta_pT30_40_NPV[i] = pvSubDir.make<TProfile>(("p_" + name + "_eta_pT30_40_NPV" + NPVs).c_str(),"30<p_{T}^{gen}<40 GeV/c;#eta;<p_{T}^{calo}/p_{T}^{gen}>",50,-5.,5.);
+         p_CaloJetpToverGenJetpT_eta_pT40_50_NPV[i] = pvSubDir.make<TProfile>(("p_" + name + "_eta_pT40_50_NPV" + NPVs).c_str(),"40<p_{T}^{gen}<50 GeV/c;#eta;<p_{T}^{calo}/p_{T}^{gen}>",50,-5.,5.);
+         p_CaloJetpToverGenJetpT_eta_pT50_70_NPV[i] = pvSubDir.make<TProfile>(("p_" + name + "_eta_pT50_70_NPV" + NPVs).c_str(),"50<p_{T}^{gen}<70 GeV/c;#eta;<p_{T}^{calo}/p_{T}^{gen}>",50,-5.,5.);
+         p_CaloJetpToverGenJetpT_eta_pT70_100_NPV[i] = pvSubDir.make<TProfile>(("p_" + name + "_eta_pT70_100_NPV" + NPVs).c_str(),"70<p_{T}^{gen}<100 GeV/c;#eta;<p_{T}^{calo}/p_{T}^{gen}>",50,-5.,5.);
       }
    }
    
@@ -292,26 +291,12 @@ ClosureAnalysis::beginJob(const edm::EventSetup&)
          EcorrNPV[i] = (TProfile*)offsetCorrSubDir->Get(AvgEProf);
       }
    }
-   // debug
-//    cout<<" >> ++++++++++++ begin job executed!"<<endl;
 }
 
 // ------------ method called to for each event  ------------
 void
 ClosureAnalysis::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
-   // debug
-//    cout<<" >> ++++++++++++ analyze started!"<<endl;
-//    // Debugging
-//    if (doCorr_ && !doPVs_) {
-//       cout<<">> ============== Debugging output: !doPVs ================"<<endl;
-//       cout<<">> pTcorr(1.0) = "<<getCorrection(pTcorr,1.0)<<endl;
-//    } else if (doCorr_ && doPVs_) {
-//       cout<<">> ============== Debugging output: doPVs ================"<<endl;
-//       cout<<">> pTcorrNPV0(1.0) = "<<getCorrection(pTcorrNPV[0],1.0)<<endl;
-//       cout<<">> pTcorrNPV1(1.0) = "<<getCorrection(pTcorrNPV[1],1.0)<<endl;
-//       cout<<">> pTcorrNPV2(1.0) = "<<getCorrection(pTcorrNPV[2],1.0)<<endl;
-//    }
    // ==========================================
    // ======= Primary Vertices ==========
    // ==========================================
@@ -331,13 +316,9 @@ ClosureAnalysis::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
       }
       // fill in the number of valid reconstructed primary vertices
       h_NofPVs->Fill( nPV );
-      // debug
-//       cout<<" >> ++++++++++++ NPVs = "<<nPV<<endl;
-//       cout<<" >> ++++++++++++ minNPVs = "<<minNPVs<<endl;
+
       if ( nPV < minNPVs || nPV > maxNPVs_ ) PVcond = false;
    }
-   // debug
-//    cout<<" >> ++++++++++++ PV part executed!"<<endl;
    // ==========================================
    // ============== Closure Test ==============
    // ==========================================
@@ -350,14 +331,10 @@ ClosureAnalysis::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
       cerr << "[ClosureAnalysis] caught std::exception " << ce.what() << endl;
       return;
    }
-   // debug
-//    cout<<" >> ++++++++++++ getByLabel part executed!"<<endl;
    // loop over all CaloJets
    for( CandMatchMapMany::const_iterator cg = caloGenMatchedJetsMany->begin();
                                          cg != caloGenMatchedJetsMany->end();
                                          cg++ ) {
-      // debug
-//       cout<<" >> ++++++++++++ entered CaloJet loop!"<<endl;
       const Candidate *sourceRef = &*(cg->key);
       bool isIsolated = true;
       // check if a given CaloJet is isolated from other CaloJets
@@ -381,8 +358,6 @@ ClosureAnalysis::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
             }
 	 }
       }
-      // debug
-//       cout<<" >> ++++++++++++ isIsolated part executed!"<<endl;
       // if a given CaloJet is isolated from other CaloJets, also check that there is only one GenJet with dR<dR_max
       if ( isIsolated ) {
 	 int nMatchedGenJets = 0;
@@ -410,30 +385,21 @@ ClosureAnalysis::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
 	 h_GenJetMatches->Fill(nMatchedGenJets);
 	 // fill the histograms if there is only one GenJet with dR<dR_max and |CaloJet eta|<5 (offset correction was not derived for |CaloJet eta|>5)
 	 double caloJetEta = sourceRef->eta();
-	 // debug
-//          cout<<" >> ++++++++++++ nMatchedGenJets part executed!"<<endl;
-//          cout<<" >> ++++++++++++ nMatchedGenJets = "<<nMatchedGenJets<<endl;
 	 if ( nMatchedGenJets == 1 && fabs(caloJetEta)<5 ) {
 	    double caloJetpT = 0;
 	    double caloJetE = 0;
 	    if ( doCorr_ && !doPVs_ ) {
-	       // debug
-//                cout<<" >> ++++++++++++ entered PV independent caloJetpT correction!"<<endl;
 	       caloJetpT = sourceRef->pt()-getCorrection(pTcorr,caloJetEta);
 	       caloJetE = sourceRef->energy()-getCorrection(Ecorr,caloJetEta);
 	    } else if ( doCorr_ && doPVs_ && PVcond ) {
-	       // debug
-//                cout<<" >> ++++++++++++ entered PV dependent caloJetpT correction!"<<endl;
 	       caloJetpT = sourceRef->pt()-getCorrection(pTcorrNPV[nPV-1],caloJetEta);
 	       caloJetE = sourceRef->energy()-getCorrection(EcorrNPV[nPV-1],caloJetEta);
+            } else if ( doCorr_ && doPVs_ && !PVcond ) {
+               break;
 	    } else {
-	       // debug
-//                cout<<" >> ++++++++++++ no correction for caloJetpT!"<<endl;
 	       caloJetpT = sourceRef->pt();
 	       caloJetE = sourceRef->energy();
 	    }
-	    // debug
-//             cout<<" >> ++++++++++++ caloJetpT part executed!"<<endl;
 	    double pT_ratio = caloJetpT/matchedGenJetpT;
 	    double E_ratio = caloJetE/matchedGenJetE;
 	    h_CaloGenDeltaR->Fill(deltaR);
@@ -442,15 +408,9 @@ ClosureAnalysis::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
             h_CaloJetpToverGenJetpT_pT->Fill(matchedGenJetpT,pT_ratio);
 	    p_CaloJetpToverGenJetpT_pT->Fill(matchedGenJetpT,pT_ratio);
 	    p_CaloJetEoverGenJetE_pT->Fill(matchedGenJetpT,E_ratio);
-	    // debug
-//             cout<<" >> ++++++++++++ doPVs_ = "<<doPVs_<<endl;
-//             cout<<" >> ++++++++++++ PVcond = "<<PVcond<<endl;
 	    if ( doPVs_ && PVcond ) {
                h_CaloJetpToverGenJetpT_pT_NPV[nPV]->Fill(matchedGenJetpT,pT_ratio);
                p_CaloJetpToverGenJetpT_pT_NPV[nPV]->Fill(matchedGenJetpT,pT_ratio);
-               // debug
-//                cout<<" >> ++++++++++++ CaloJetpToverGenJetpT_pT_NPV part executed!"<<endl;
-//                cout<<" >> ++++++++++++ NPVs = "<<nPV<<endl;
 	    }
 	    // fill the histograms for different CaloJet eta bins
 	    if ( fabs(caloJetEta)<1.3 ) {
@@ -491,49 +451,34 @@ ClosureAnalysis::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
 	       if ( doPVs_ && PVcond ) {
 	          p_CaloJetpToverGenJetpT_eta_pT20_25_NPV[nPV]->Fill(caloJetEta,pT_ratio);
 	       }
-	    } else if ( matchedGenJetpT>=25 && matchedGenJetpT<30 ) {
-	       p_CaloJetpToverGenJetpT_eta_pT25_30->Fill(caloJetEta,pT_ratio);
-	       p_CaloJetEoverGenJetE_eta_pT25_30->Fill(caloJetEta,E_ratio);
+	    } else if ( matchedGenJetpT>=25 && matchedGenJetpT<40 ) {
+	       p_CaloJetpToverGenJetpT_eta_pT25_40->Fill(caloJetEta,pT_ratio);
+	       p_CaloJetEoverGenJetE_eta_pT25_40->Fill(caloJetEta,E_ratio);
 	       if ( doPVs_ && PVcond ) {
 	          p_CaloJetpToverGenJetpT_eta_pT25_30_NPV[nPV]->Fill(caloJetEta,pT_ratio);
 	       }
-	    } else if ( matchedGenJetpT>=30 && matchedGenJetpT<40 ) {
-	       p_CaloJetpToverGenJetpT_eta_pT30_40->Fill(caloJetEta,pT_ratio);
-	       p_CaloJetEoverGenJetE_eta_pT30_40->Fill(caloJetEta,E_ratio);
+	    } else if ( matchedGenJetpT>=40 && matchedGenJetpT<60 ) {
+	       p_CaloJetpToverGenJetpT_eta_pT40_60->Fill(caloJetEta,pT_ratio);
+	       p_CaloJetEoverGenJetE_eta_pT40_60->Fill(caloJetEta,E_ratio);
 	       if ( doPVs_ && PVcond ) {
 	          p_CaloJetpToverGenJetpT_eta_pT30_40_NPV[nPV]->Fill(caloJetEta,pT_ratio);
 	       }
-	    } else if ( matchedGenJetpT>=40 && matchedGenJetpT<50 ) {
-	       p_CaloJetpToverGenJetpT_eta_pT40_50->Fill(caloJetEta,pT_ratio);
-	       p_CaloJetEoverGenJetE_eta_pT40_50->Fill(caloJetEta,E_ratio);
+	    } else if ( matchedGenJetpT>=60 && matchedGenJetpT<100 ) {
+	       p_CaloJetpToverGenJetpT_eta_pT60_100->Fill(caloJetEta,pT_ratio);
+	       p_CaloJetEoverGenJetE_eta_pT60_100->Fill(caloJetEta,E_ratio);
 	       if ( doPVs_ && PVcond ) {
 	          p_CaloJetpToverGenJetpT_eta_pT40_50_NPV[nPV]->Fill(caloJetEta,pT_ratio);
-	       }
-	    } else if ( matchedGenJetpT>=50 && matchedGenJetpT<70 ) {
-	       p_CaloJetpToverGenJetpT_eta_pT50_70->Fill(caloJetEta,pT_ratio);
-	       p_CaloJetEoverGenJetE_eta_pT50_70->Fill(caloJetEta,E_ratio);
-	       if ( doPVs_ && PVcond ) {
-	          p_CaloJetpToverGenJetpT_eta_pT50_70_NPV[nPV]->Fill(caloJetEta,pT_ratio);
-	       }
-	    } else if ( matchedGenJetpT>=70 && matchedGenJetpT<100 ) {
-	       p_CaloJetpToverGenJetpT_eta_pT70_100->Fill(caloJetEta,pT_ratio);
-	       p_CaloJetEoverGenJetE_eta_pT70_100->Fill(caloJetEta,E_ratio);
-	       if ( doPVs_ && PVcond ) {
-	          p_CaloJetpToverGenJetpT_eta_pT70_100_NPV[nPV]->Fill(caloJetEta,pT_ratio);
 	       }
 	    }
 	 }
       }
    }
-   // debug
-//    cout<<" >> ++++++++++++ analysis finished!"<<endl;
 }
 
 // ------------ method called once each job just after ending the event loop  ------------
 void 
 ClosureAnalysis::endJob() {
-   // debug
-//    cout<<" >> ++++++++++++ end job executed!"<<endl;
+
 }
 
 double ClosureAnalysis::getCorrection(const TProfile *fCorr, const double fEta)
