@@ -1,0 +1,10 @@
+universe = vanilla
+Executable = ../RAW2DIGI-RECO.sh
+Requirements = Memory >= 199 && OpSys == "LINUX" && (Arch != "DUMMY")
+Should_Transfer_Files = YES
+WhenToTransferOutput = ON_EXIT
+Output = 5PU_Full_Poisson_BX_0_+3_IDEAL_V9_GEN-SIM-RECO_$(cluster)_$(process).stdout
+Error  = 5PU_Full_Poisson_BX_0_+3_IDEAL_V9_GEN-SIM-RECO_$(cluster)_$(process).stderr
+Log    = 5PU_Full_Poisson_BX_0_+3_IDEAL_V9_GEN-SIM-RECO_$(cluster)_$(process).condor
+Arguments = $(cluster) $(process) /uscmst1b_scratch/lpc1/lpcphys/ferencek/CMSSW_2_1_8/test/MCdata 5PU_Full_Poisson_BX_0_+3_IDEAL_V9_GEN-SIM-RECO 500
+Queue 10

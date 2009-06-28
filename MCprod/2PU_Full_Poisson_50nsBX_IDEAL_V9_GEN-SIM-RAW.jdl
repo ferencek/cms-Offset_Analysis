@@ -1,0 +1,10 @@
+universe = vanilla
+Executable = ../GEN-SIM-RAW.sh
+Requirements = Memory >= 199 && OpSys == "LINUX" && (Arch != "DUMMY")
+Should_Transfer_Files = YES
+WhenToTransferOutput = ON_EXIT
+Output = 2PU_Full_Poisson_50nsBX_IDEAL_V9_GEN-SIM-RAW_$(cluster)_$(process).stdout
+Error  = 2PU_Full_Poisson_50nsBX_IDEAL_V9_GEN-SIM-RAW_$(cluster)_$(process).stderr
+Log    = 2PU_Full_Poisson_50nsBX_IDEAL_V9_GEN-SIM-RAW_$(cluster)_$(process).condor
+Arguments = $(cluster) $(process) /uscmst1b_scratch/lpc1/lpcphys/ferencek/CMSSW_2_1_7/test/MCdata 2PU_Full_Poisson_50nsBX_IDEAL_V9_GEN-SIM-RAW 123456789 500
+Queue 10

@@ -1,0 +1,10 @@
+universe = vanilla
+Executable = ../GEN-SIM-RAW.sh
+Requirements = Memory >= 199 && OpSys == "LINUX" && (Arch != "DUMMY")
+Should_Transfer_Files = YES
+WhenToTransferOutput = ON_EXIT
+Output = QCDpt15_plus_5PU_InTime_Poisson_IDEAL_V9_GEN-SIM-RAW_$(cluster)_$(process).stdout
+Error  = QCDpt15_plus_5PU_InTime_Poisson_IDEAL_V9_GEN-SIM-RAW_$(cluster)_$(process).stderr
+Log    = QCDpt15_plus_5PU_InTime_Poisson_IDEAL_V9_GEN-SIM-RAW_$(cluster)_$(process).condor
+Arguments = $(cluster) $(process) /uscmst1b_scratch/lpc1/lpcphys/ferencek/CMSSW_2_1_7/test/MCdata QCDpt15_plus_5PU_InTime_Poisson_IDEAL_V9_GEN-SIM-RAW 123456789 1000
+Queue 50
