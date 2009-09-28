@@ -13,7 +13,7 @@
 //
 // Original Author:  "Dinko Ferencek"
 //         Created:  Mon Jun  9 18:48:23 CDT 2008
-// $Id: OffsetAnalysis.cc,v 1.2 2009/06/28 17:51:43 ferencek Exp $
+// $Id: OffsetAnalysis.cc,v 1.3 2009/09/28 14:45:49 ferencek Exp $
 //
 //
 
@@ -134,8 +134,8 @@ class OffsetAnalysis : public edm::EDAnalyzer {
       TH1F *h_CaloTowerET;
       TH1F *h_nCaloTowers;
       
-      TH2F *h_FracConeArea;
-      TProfile *p_FracConeArea;
+      TH2F *h_EffConeArea;
+      TProfile *p_EffConeArea;
       
       TH2F *h_EinC5_Eta;
       TProfile *p_AvgEinC5;
@@ -302,9 +302,9 @@ OffsetAnalysis::beginJob(const edm::EventSetup&)
    h_CaloTowerET     = fs->make<TH1F>("h_CaloTowerET", "CaloTower E_{T};E_{T} [GeV]",200,-2,3);
    h_nCaloTowers   = fs->make<TH1F>("h_nCaloTowers","Number of CaloTowers per Event;Number of Calotowers",6000,0,6000);
    
-   // fractional cone area
-   h_FracConeArea = fs->make<TH2F>("h_FracConeArea","FracConeArea:#eta;#eta;towersArea/R_{cone}^{2}#pi",100,-5.,5.,110,0.,1.1);
-   p_FracConeArea = fs->make<TProfile>("p_FracConeArea","Effective Cone Area;#eta;<towersArea/R_{cone}^{2}#pi>",100,-5.,5.);
+   // effective cone area
+   h_EffConeArea = fs->make<TH2F>("h_EffConeArea","EffConeArea:#eta;#eta;towersArea/R_{cone}^{2}#pi",100,-5.,5.,110,0.,1.1);
+   p_EffConeArea = fs->make<TProfile>("p_EffConeArea","Effective Cone Area;#eta;<towersArea/R_{cone}^{2}#pi>",100,-5.,5.);
    
    // in-cone energy contributions
    h_EinC5_Eta   = fs->make<TH2F>("h_EinC5_Eta","EinC5:#eta;#eta;E [GeV]",100,-5.,5.,770,-7.8,300.2);
@@ -660,10 +660,10 @@ OffsetAnalysis::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
       for (int i = 0; i < 100; i++) {
          double coneEta = -4.95 + double(i)*0.1;
          
-         double fracConeArea = towerAreaSum[i]/(0.5*0.5*M_PI);
+         double effConeArea = towerAreaSum[i]/(0.5*0.5*M_PI);
          
-         h_FracConeArea->Fill(coneEta,fracConeArea);
-         p_FracConeArea->Fill(coneEta,fracConeArea);
+         h_EffConeArea->Fill(coneEta,effConeArea);
+         p_EffConeArea->Fill(coneEta,effConeArea);
          
          h_EinC5_Eta->Fill(coneEta,EinC5[i]);
          p_AvgEinC5->Fill(coneEta,EinC5[i]);
