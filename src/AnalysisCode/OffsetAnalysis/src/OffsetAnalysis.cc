@@ -13,7 +13,7 @@
 //
 // Original Author:  "Dinko Ferencek"
 //         Created:  Mon Jun  9 18:48:23 CDT 2008
-// $Id$
+// $Id: OffsetAnalysis.cc,v 1.2 2009/06/28 17:51:43 ferencek Exp $
 //
 //
 
@@ -84,20 +84,11 @@ class OffsetAnalysis : public edm::EDAnalyzer {
       virtual void beginJob(const edm::EventSetup&);
       virtual void analyze(const edm::Event&, const edm::EventSetup&);
       virtual void endJob();
-      template <class histType> histType* savePlot(histType*, const std::string&, const Option_t*);
       void fillHistos(const TH2F* fHistIn, TH1F* fHistOut1, TH1F* fHistOut2);
       double deltaPhi(double phi1, double phi2);
       
       // ----------member data ---------------------------
       edm::Service<TFileService> fs;
-
-      TH1F *h_NofPVs;
-      TH1F *h_NofPVTracks;
-      TH1F *h_PVChi2overNdof;
-      TH1F *h_PVz;
-      TH1F *h_NofCPs;
-      TH1F *h_NofCPsEta25;
-      TH2F *h_NofPVs_NofCPsEta25;
       
       TH1F *h_RecHitEinEB; 
       TH1F *h_RecHitEinEE;
@@ -139,82 +130,45 @@ class OffsetAnalysis : public edm::EDAnalyzer {
       TH1F *h_RMSRecHitEinHFl;
       TH1F *h_RMSRecHitEinHFs;
       
-//       TH2F *h_CaloTowerE_iEta_iPhi;
-//       TH1F *h_ETminusPT; 
-//       TH1F *h_PTandPxPy; 
-//       TH1F *h_ETandE;
-//       TH1F *h_PTandPx;
-//       TH1F *h_PTandPy;
-      
       TH1F *h_CaloTowerE;
       TH1F *h_CaloTowerET;
-//       TH1F *h_CaloTowerEinB;
-//       TH1F *h_CaloTowerETinB;
-//       TH1F *h_CaloTowerEinE;
-//       TH1F *h_CaloTowerETinE;
-//       TH1F *h_CaloTowerEinF;
-//       TH1F *h_CaloTowerETinF;
-//       TH1F *h_CaloTowerEta;
-//       TH1F *h_CaloTowerPhi;
       TH1F *h_nCaloTowers;
       
-      TH2F *h_EffConeArea;
-      TProfile *p_EffConeArea;
+      TH2F *h_FracConeArea;
+      TProfile *p_FracConeArea;
       
       TH2F *h_EinC5_Eta;
       TProfile *p_AvgEinC5;
+
+      TProfile *p_AvgEinC5HB;
+      TProfile *p_AvgEinC5HE;
+      TProfile *p_AvgEinC5HO;
+      TProfile *p_AvgEinC5HFl;
+      TProfile *p_AvgEinC5HFs;
+      TProfile *p_AvgEinC5EB;
+      TProfile *p_AvgEinC5EE;
+      
       TH2F *h_pTinC5_Eta;
       TProfile *p_AvgpTinC5;
-
-      TH2F *h_EinC5HB_Eta;
-      TProfile *p_AvgEinC5HB;
-      TH2F *h_EinC5HE_Eta;
-      TProfile *p_AvgEinC5HE;
-      TH2F *h_EinC5HO_Eta;
-      TProfile *p_AvgEinC5HO;
-      TH2F *h_EinC5HFl_Eta;
-      TProfile *p_AvgEinC5HFl;
-      TH2F *h_EinC5HFs_Eta;
-      TProfile *p_AvgEinC5HFs;
-      TH2F *h_EinC5EB_Eta;
-      TProfile *p_AvgEinC5EB;
-      TH2F *h_EinC5EE_Eta;
-      TProfile *p_AvgEinC5EE;
       
       TH2F *h_EinER_iEta;
       TProfile *p_AvgEinER;
-      TH2F *h_ETinER_iEta;
-      TProfile *p_AvgETinER;
 
-      TH2F *h_EinERHB_iEta;
       TProfile *p_AvgEinERHB;
-      TH2F *h_EinERHE_iEta;
       TProfile *p_AvgEinERHE;
-      TH2F *h_EinERHO_iEta;
       TProfile *p_AvgEinERHO;
-      TH2F *h_EinERHFl_iEta;
       TProfile *p_AvgEinERHFl;
-      TH2F *h_EinERHFs_iEta;
       TProfile *p_AvgEinERHFs;
-      TH2F *h_EinEREB_iEta;
       TProfile *p_AvgEinEREB;
-      TH2F *h_EinEREE_iEta;
       TProfile *p_AvgEinEREE;
       
-      TH2F *h_ETinERHB_iEta;
-      TProfile *p_AvgETinERHB;
-      TH2F *h_ETinERHE_iEta;
-      TProfile *p_AvgETinERHE;
-      TH2F *h_ETinERHO_iEta;
-      TProfile *p_AvgETinERHO;
-      TH2F *h_ETinERHFl_iEta;
-      TProfile *p_AvgETinERHFl;
-      TH2F *h_ETinERHFs_iEta;
-      TProfile *p_AvgETinERHFs;
-      TH2F *h_ETinEREB_iEta;
-      TProfile *p_AvgETinEREB;
-      TH2F *h_ETinEREE_iEta;
-      TProfile *p_AvgETinEREE;
+      TH1F *h_NofPVs;
+      TH1F *h_NofPVTracks;
+      TH1F *h_PVChi2overNdof;
+      TH1F *h_PVz;
+      TH1F *h_NofCPs;
+      TH1F *h_NofCPsEta25;
+      TH2F *h_NofPVs_NofCPsEta25;
       
       map<int, TProfile*> p_AvgEinC5NPV;
       map<int, TProfile*> p_AvgpTinC5NPV;
@@ -279,28 +233,7 @@ OffsetAnalysis::OffsetAnalysis(const edm::ParameterSet& iConfig)
    caloTowers_      = iConfig.getUntrackedParameter<string>("caloTowers","towerMaker");
    doPVs_           = iConfig.getUntrackedParameter<bool>("doPVs",true);
    maxNPVs_         = iConfig.getUntrackedParameter<int>("maxNPVs",0);
-   pvCollection_    = iConfig.getParameter<InputTag>("pvCollection");
-   savePlots_       = iConfig.getUntrackedParameter<bool>("savePlots",false);
-   outputDir_       = iConfig.getUntrackedParameter<string>("outputDir",".");
-   doPNG_           = iConfig.getUntrackedParameter<bool>("doPNG",true);
-   doEPS_           = iConfig.getUntrackedParameter<bool>("doEPS",false);
-   
-   // set ROOT style
-   gStyle->Reset("Default");
-   gStyle->SetCanvasColor(0);
-   gStyle->SetPadColor(0);
-   gStyle->SetTitleFillColor(10);
-   gStyle->SetCanvasBorderMode(0);
-   gStyle->SetStatColor(0);
-   gStyle->SetPadBorderMode(0);
-   gStyle->SetFrameBorderMode(0);
-   gStyle->SetOptStat("nouemr");
-   gStyle->SetPalette(1);
-   gStyle->SetOptFit(111);
-   gStyle->SetStatX(1.0);
-   gStyle->SetStatY(1.0);
-   gStyle->SetStatW(0.18);
-   gStyle->SetStatH(0.15);
+   pvCollection_    = iConfig.getParameter<InputTag>("pvCollection");   
 }
 
 
@@ -364,51 +297,26 @@ OffsetAnalysis::beginJob(const edm::EventSetup&)
    h_RMSRecHitEinHFl   = fs->make<TH1F>("h_RMSRecHitEinHFl","HFl RMS RecHit E;i#eta;RMS E [GeV]",83,-41.5,41.5);
    h_RMSRecHitEinHFs   = fs->make<TH1F>("h_RMSRecHitEinHFs","HFs RMS RecHit E;i#eta;RMS E [GeV]",83,-41.5,41.5);
    
-   // additional histograms for debugging purposes
-   //TFileDirectory recHitSubDir = fs->mkdir( "Additional" );
-
-//    h_CaloTowerE_iEta_iPhi      = recHitSubDir.make<TH2F>("h_CaloTowerE_iEta_iPhi","Calorimeter energy deposits;i#eta;i#phi",83,-41.5,41.5,72,0.5,72.5);
-//    h_ETminusPT = recHitSubDir.make<TH1F>("h_ETminusPT",";E [GeV]",201,-0.5,0.5);
-//    h_PTandPxPy = recHitSubDir.make<TH1F>("h_PTandPxPy",";E [GeV]",201,-0.5,0.5);
-//    h_ETandE = recHitSubDir.make<TH1F>("h_ETandE",";E [GeV]",201,-0.5,0.5);
-//    h_PTandPx = recHitSubDir.make<TH1F>("h_PTandPx",";E [GeV]",201,-0.5,0.5);
-//    h_PTandPy = recHitSubDir.make<TH1F>("h_PTandPy",";E [GeV]",201,-0.5,0.5);
-   
    // CaloTower histograms
    h_CaloTowerE      = fs->make<TH1F>("h_CaloTowerE", "CaloTower Energy;E [GeV]",200,-5,10);
    h_CaloTowerET     = fs->make<TH1F>("h_CaloTowerET", "CaloTower E_{T};E_{T} [GeV]",200,-2,3);
-//    h_CaloTowerEinB   = fs->make<TH1F>("h_CaloTowerEinB", "CaloTower Energy in Barrel Region;E [GeV]",150,-2,5);
-//    h_CaloTowerETinB  = fs->make<TH1F>("h_CaloTowerETinB", "CaloTower E_{T} in Barrel Region;E_{T} [GeV]",150,-2,3);
-//    h_CaloTowerEinE   = fs->make<TH1F>("h_CaloTowerEinE", "CaloTower Energy in Endcap Region;E [GeV]",150,-2,4);
-//    h_CaloTowerETinE  = fs->make<TH1F>("h_CaloTowerETinE", "CaloTower E_{T} in Endcap Region;E_{T} [GeV]",150,-1,1);
-//    h_CaloTowerEinF   = fs->make<TH1F>("h_CaloTowerEinF", "CaloTower Energy in Forward Region;E [GeV]",150,-2,8);
-//    h_CaloTowerETinF  = fs->make<TH1F>("h_CaloTowerETinF", "CaloTower E_{T} in Forward Region;E_{T} [GeV]",150,-1,1);
-//    h_CaloTowerEta = fs->make<TH1F>("h_CaloTowerEta", "CaloTower #eta;#eta",200,-5,5 );
-//    h_CaloTowerPhi = fs->make<TH1F>("h_CaloTowerPhi", "CaloTower #phi;#phi",72,-3.1416,3.1416 );
-   h_nCaloTowers   = fs->make<TH1F>("h_nCaloTowers","Number of CaloTowers in Event;Number of Calotowers",6000,0,6000);
+   h_nCaloTowers   = fs->make<TH1F>("h_nCaloTowers","Number of CaloTowers per Event;Number of Calotowers",6000,0,6000);
    
-   // effective cone area
-   h_EffConeArea = fs->make<TH2F>("h_EffConeArea","EffConeArea:#eta;#eta;towersArea/R_{cone}^{2}#pi",100,-5.,5.,110,0.,1.1);
-   p_EffConeArea = fs->make<TProfile>("p_EffConeArea","Effective Cone Area;#eta;<towersArea/R_{cone}^{2}#pi>",100,-5.,5.);
+   // fractional cone area
+   h_FracConeArea = fs->make<TH2F>("h_FracConeArea","FracConeArea:#eta;#eta;towersArea/R_{cone}^{2}#pi",100,-5.,5.,110,0.,1.1);
+   p_FracConeArea = fs->make<TProfile>("p_FracConeArea","Effective Cone Area;#eta;<towersArea/R_{cone}^{2}#pi>",100,-5.,5.);
    
    // in-cone energy contributions
    h_EinC5_Eta   = fs->make<TH2F>("h_EinC5_Eta","EinC5:#eta;#eta;E [GeV]",100,-5.,5.,770,-7.8,300.2);
    p_AvgEinC5    = fs->make<TProfile>("p_AvgEinC5", "<E> in R_{cone}=0.5;#eta;<E> [GeV]",100,-5.,5.);
    
-//    h_EinC5HB_Eta = fs->make<TH2F>    ("h_EinC5HB_Eta","HB EinC5:#eta;#eta;E [GeV]",100,-5.,5.,120,-10,10);
-   p_AvgEinC5HB  = fs->make<TProfile>("p_AvgEinC5HB", "<E_{HB}> in R_{cone}=0.5;#eta;<E> [GeV]",100,-5.,5.);
-//    h_EinC5HE_Eta = fs->make<TH2F>    ("h_EinC5HE_Eta","HE EinC5:#eta;#eta;E [GeV]",100,-5.,5.,120,-10,10);
-   p_AvgEinC5HE  = fs->make<TProfile>("p_AvgEinC5HE", "<E_{HE}> in R_{cone}=0.5;#eta;<E> [GeV]",100,-5.,5.);
-//    h_EinC5HO_Eta = fs->make<TH2F>    ("h_EinC5HO_Eta","HO EinC5:#eta;#eta;E [GeV]",100,-5.,5.,120,-10,10);
-   p_AvgEinC5HO  = fs->make<TProfile>("p_AvgEinC5HO", "<E_{HO}> in R_{cone}=0.5;#eta;<E> [GeV]",100,-5.,5.);
-//    h_EinC5HFl_Eta = fs->make<TH2F>    ("h_EinC5HFl_Eta","HFl EinC5:#eta;#eta;E [GeV]",100,-5.,5.,120,-10,10);
-   p_AvgEinC5HFl  = fs->make<TProfile>("p_AvgEinC5HFl", "<E_{HFl}> in R_{cone}=0.5;#eta;<E> [GeV]",100,-5.,5.);
-//    h_EinC5HFs_Eta = fs->make<TH2F>    ("h_EinC5HFs_Eta","HFs EinC5:#eta;#eta;E [GeV]",100,-5.,5.,120,-10,10);
-   p_AvgEinC5HFs  = fs->make<TProfile>("p_AvgEinC5HFs", "<E_{HFs}> in R_{cone}=0.5;#eta;<E> [GeV]",100,-5.,5.);
-//    h_EinC5EB_Eta = fs->make<TH2F>    ("h_EinC5EB_Eta","EB EinC5:#eta;#eta;E [GeV]",100,-5.,5.,120,-10,10);
    p_AvgEinC5EB  = fs->make<TProfile>("p_AvgEinC5EB", "<E_{EB}> in R_{cone}=0.5;#eta;<E> [GeV]",100,-5.,5.);
-//    h_EinC5EE_Eta = fs->make<TH2F>    ("h_EinC5EE_Eta","EE EinC5:#eta;#eta;E [GeV]",100,-5.,5.,120,-10,10);
    p_AvgEinC5EE  = fs->make<TProfile>("p_AvgEinC5EE", "<E_{EE}> in R_{cone}=0.5;#eta;<E> [GeV]",100,-5.,5.);
+   p_AvgEinC5HB  = fs->make<TProfile>("p_AvgEinC5HB", "<E_{HB}> in R_{cone}=0.5;#eta;<E> [GeV]",100,-5.,5.);
+   p_AvgEinC5HE  = fs->make<TProfile>("p_AvgEinC5HE", "<E_{HE}> in R_{cone}=0.5;#eta;<E> [GeV]",100,-5.,5.);
+   p_AvgEinC5HO  = fs->make<TProfile>("p_AvgEinC5HO", "<E_{HO}> in R_{cone}=0.5;#eta;<E> [GeV]",100,-5.,5.);
+   p_AvgEinC5HFl  = fs->make<TProfile>("p_AvgEinC5HFl", "<E_{HFl}> in R_{cone}=0.5;#eta;<E> [GeV]",100,-5.,5.);
+   p_AvgEinC5HFs  = fs->make<TProfile>("p_AvgEinC5HFs", "<E_{HFs}> in R_{cone}=0.5;#eta;<E> [GeV]",100,-5.,5.);
    
    // in-cone pT contribution
    h_pTinC5_Eta   = fs->make<TH2F>("h_pTinC5_Eta","pTinC5:#eta;#eta;p_{T} [GeV/c]",100,-5.,5.,525,-2.45,50.05);
@@ -417,38 +325,14 @@ OffsetAnalysis::beginJob(const edm::EventSetup&)
    // energy in iEta rings
    h_EinER_iEta  = fs->make<TH2F>("h_EinER_iEta","EinER:i#eta;i#eta;E [GeV]",83,-41.5,41.5,770,-7.8,300.2);
    p_AvgEinER    = fs->make<TProfile>("p_AvgEinER", "<E> in i#eta Ring;i#eta;<E> [GeV]",83,-41.5,41.5);
-//    h_ETinER_iEta = fs->make<TH2F>("h_ETinER_iEta","ETinER:i#eta;i#eta;E_{T} [GeV]",83,-41.5,41.5,1575,-2.5,50);
-//    p_AvgETinER   = fs->make<TProfile>("p_AvgETinER", "<E_{T}> in i#eta Ring;i#eta;<E_{T}> [GeV]",83,-41.5,41.5);
    
-//    h_EinERHB_iEta  = fs->make<TH2F>    ("h_EinERHB_iEta","HB EinER:i#eta HB;i#eta;E [GeV]",83,-41.5,41.5,120,-10,10);
-   p_AvgEinERHB    = fs->make<TProfile>("p_AvgEinERHB", "<E_{HB}> in i#eta Ring;i#eta;<E> [GeV]",83,-41.5,41.5);
-//    h_EinERHE_iEta  = fs->make<TH2F>    ("h_EinERHE_iEta","HE EinER:i#eta;i#eta;E [GeV]",83,-41.5,41.5,120,-10,10);
-   p_AvgEinERHE    = fs->make<TProfile>("p_AvgEinERHE", "<E_{HE}> in i#eta Ring;i#eta;<E> [GeV]",83,-41.5,41.5);
-//    h_EinERHO_iEta  = fs->make<TH2F>    ("h_EinERHO_iEta","HO EinER:i#eta;i#eta;E [GeV]",83,-41.5,41.5,120,-10,10);
-   p_AvgEinERHO    = fs->make<TProfile>("p_AvgEinERHO", "<E_{HO}> in i#eta Ring;i#eta;<E> [GeV]",83,-41.5,41.5);
-//    h_EinERHFl_iEta = fs->make<TH2F>    ("h_EinERHFl_iEta","HFl EinER:i#eta;i#eta;E [GeV]",83,-41.5,41.5,120,-10,10);
-   p_AvgEinERHFl   = fs->make<TProfile>("p_AvgEinERHFl", "<E_{HFl}> in i#eta Ring;i#eta;<E> [GeV]",83,-41.5,41.5);
-//    h_EinERHFs_iEta = fs->make<TH2F>    ("h_EinERHFs_iEta","HFs EinER:i#eta;i#eta;E [GeV]",83,-41.5,41.5,120,-10,10);
-   p_AvgEinERHFs   = fs->make<TProfile>("p_AvgEinERHFs", "<E_{HFs}> in i#eta Ring;i#eta;<E> [GeV]",83,-41.5,41.5);
-//    h_EinEREB_iEta  = fs->make<TH2F>    ("h_EinEREB_iEta","EB EinER:i#eta;i#eta;E [GeV]",83,-41.5,41.5,120,-10,10);
    p_AvgEinEREB    = fs->make<TProfile>("p_AvgEinEREB", "<E_{EB}> in i#eta Ring;i#eta;<E> [GeV]",83,-41.5,41.5);
-//    h_EinEREE_iEta  = fs->make<TH2F>    ("h_EinEREE_iEta","EE EinER:i#eta;i#eta;E [GeV]",83,-41.5,41.5,120,-10,10);
    p_AvgEinEREE    = fs->make<TProfile>("p_AvgEinEREE", "<E_{EE}> in i#eta Ring;i#eta;<E> [GeV]",83,-41.5,41.5);
-   
-//    h_ETinERHB_iEta  = fs->make<TH2F>    ("h_ETinERHB_iEta","HB ETinER:i#eta HB;i#eta;E_{T} [GeV]",83,-41.5,41.5,120,-10,10);
-//    p_AvgETinERHB    = fs->make<TProfile>("p_AvgETinERHB", "<(E_{HB})_{T}> in i#eta Ring;i#eta;<E_{T}> [GeV]",83,-41.5,41.5);
-//    h_ETinERHE_iEta  = fs->make<TH2F>    ("h_ETinERHE_iEta","HE ETinER:i#eta;i#eta;E_{T} [GeV]",83,-41.5,41.5,120,-10,10);
-//    p_AvgETinERHE    = fs->make<TProfile>("p_AvgETinERHE", "<(E_{HE})_{T}> in i#eta Ring;i#eta;<E_{T}> [GeV]",83,-41.5,41.5);
-//    h_ETinERHO_iEta  = fs->make<TH2F>    ("h_ETinERHO_iEta","HO ETinER:i#eta;i#eta;E_{T} [GeV]",83,-41.5,41.5,120,-10,10);
-//    p_AvgETinERHO    = fs->make<TProfile>("p_AvgETinERHO", "<(E_{HO})_{T}> in i#eta Ring;i#eta;<E_{T}> [GeV]",83,-41.5,41.5);
-//    h_ETinERHFl_iEta = fs->make<TH2F>    ("h_ETinERHFl_iEta","HFl ETinER:i#eta;i#eta;E_{T} [GeV]",83,-41.5,41.5,120,-10,10);
-//    p_AvgETinERHFl   = fs->make<TProfile>("p_AvgETinERHFl", "<(E_{HFl})_{T}> in i#eta Ring;i#eta;<E_{T}> [GeV]",83,-41.5,41.5);
-//    h_ETinERHFs_iEta = fs->make<TH2F>    ("h_ETinERHFs_iEta","HFs ETinER:i#eta;i#eta;E_{T} [GeV]",83,-41.5,41.5,120,-10,10);
-//    p_AvgETinERHFs   = fs->make<TProfile>("p_AvgETinERHFs", "<(E_{HFs})_{T}> in i#eta Ring;i#eta;<E_{T}> [GeV]",83,-41.5,41.5);
-//    h_ETinEREB_iEta  = fs->make<TH2F>    ("h_ETinEREB_iEta","EB ETinER:i#eta;i#eta;E_{T} [GeV]",83,-41.5,41.5,120,-10,10);
-//    p_AvgETinEREB    = fs->make<TProfile>("p_AvgETinEREB", "<(E_{EB})_{T}> in i#eta Ring;i#eta;<E_{T}> [GeV]",83,-41.5,41.5);
-//    h_ETinEREE_iEta  = fs->make<TH2F>    ("h_ETinEREE_iEta","EE ETinER:i#eta;i#eta;E_{T} [GeV]",83,-41.5,41.5,120,-10,10);
-//    p_AvgETinEREE    = fs->make<TProfile>("p_AvgETinEREE", "<(E_{EE})_{T}> in i#eta Ring;i#eta;<E_{T}> [GeV]",83,-41.5,41.5);
+   p_AvgEinERHB    = fs->make<TProfile>("p_AvgEinERHB", "<E_{HB}> in i#eta Ring;i#eta;<E> [GeV]",83,-41.5,41.5);
+   p_AvgEinERHE    = fs->make<TProfile>("p_AvgEinERHE", "<E_{HE}> in i#eta Ring;i#eta;<E> [GeV]",83,-41.5,41.5);
+   p_AvgEinERHO    = fs->make<TProfile>("p_AvgEinERHO", "<E_{HO}> in i#eta Ring;i#eta;<E> [GeV]",83,-41.5,41.5);
+   p_AvgEinERHFl   = fs->make<TProfile>("p_AvgEinERHFl", "<E_{HFl}> in i#eta Ring;i#eta;<E> [GeV]",83,-41.5,41.5);
+   p_AvgEinERHFs   = fs->make<TProfile>("p_AvgEinERHFs", "<E_{HFs}> in i#eta Ring;i#eta;<E> [GeV]",83,-41.5,41.5);
    
    // Primary Vertices
    if ( doPVs_ ) {
@@ -476,8 +360,11 @@ OffsetAnalysis::beginJob(const edm::EventSetup&)
    }
    // mark the start of the job
    jobStartFlag = true;
-   // initialize random number generator
+   // initialize the random number generator
    randomNumber = new TRandom3;
+   // initialize the event counter
+   nEvt = 0;
+
 }
 // ------------ method called to for each event  ------------
 void
@@ -634,7 +521,6 @@ OffsetAnalysis::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
       
       // energy in iEta rings
       double EinER[83]={0.};
-      double ETinER[83]={0.};
     
       double EinERHB[83]={0.};
       double EinERHE[83]={0.};
@@ -643,14 +529,6 @@ OffsetAnalysis::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
       double EinERHFs[83]={0.};
       double EinEREB[83]={0.};
       double EinEREE[83]={0.};
-      
-//       double ETinERHB[83]={0.};
-//       double ETinERHE[83]={0.};
-//       double ETinERHO[83]={0.};
-//       double ETinERHFl[83]={0.};
-//       double ETinERHFs[83]={0.};
-//       double ETinEREB[83]={0.};
-//       double ETinEREE[83]={0.};
       
       
       // initialize random Phi angle of the cone
@@ -681,25 +559,6 @@ OffsetAnalysis::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
          
          h_CaloTowerE->Fill( energy );
          h_CaloTowerET->Fill( ET );
-   //       h_CaloTowerE_iEta_iPhi->Fill(t->id().ieta(),t->id().iphi(),energy);
-         
-   //       h_ETminusPT->Fill( t->pt()-t->et() );
-   //       h_PTandPxPy->Fill( t->pt()-sqrt((t->px())*(t->px())+(t->py())*(t->py())) );
-   //       h_ETandE->Fill( t->et()-(energy/cosh(eta)) );
-   //       h_PTandPx->Fill( t->px()-t->et()*cos(phi) );
-   //       h_PTandPy->Fill( t->py()-t->et()*sin(phi) );
-         
-   //       int iEtaAbs = t->ietaAbs(); // CaloTower abs(iEta)
-   //       if ( iEtaAbs < 17 ) {
-   //          h_CaloTowerEinB->Fill( energy );
-   // 	    h_CaloTowerETinB->Fill( ET );
-   //       } else if ( iEtaAbs > 16 && iEtaAbs < 30) {
-   //          h_CaloTowerEinE->Fill( energy );
-   // 	    h_CaloTowerETinE->Fill( ET );
-   //       } else {
-   //          h_CaloTowerEinF->Fill( energy );
-   // 	    h_CaloTowerETinF->Fill( ET );
-   //       }
          
          // subdetector tower energy contributions
          double energyInHB=0;
@@ -759,7 +618,6 @@ OffsetAnalysis::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
          
          // add calotower energy to the iEta ring energy
          EinER[iEta+41]  += energy;
-         ETinER[iEta+41] += ET;	
     
          EinERHB[iEta+41] += energyInHB;
          EinERHE[iEta+41] += energyInHE;
@@ -768,16 +626,8 @@ OffsetAnalysis::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
          EinERHFs[iEta+41] += energyInHFs;
          EinEREB[iEta+41] += energyInEB;
          EinEREE[iEta+41] += energyInEE;
-               
-//          ETinERHB[iEta+41] += energyInHB/cosh(eta);
-//          ETinERHE[iEta+41] += energyInHE/cosh(eta);
-//          ETinERHO[iEta+41] += energyInHO/cosh(eta);
-//          ETinERHFl[iEta+41] += energyInHFl/cosh(eta);
-//          ETinERHFs[iEta+41] += energyInHFs/cosh(eta);
-//          ETinEREB[iEta+41] += energyInEB/cosh(eta);
-//          ETinEREE[iEta+41] += energyInEE/cosh(eta);
          
-         // loop over cones centered at different Eta values and add energy from the calotower if it is within dR=0.5 from the cone axis
+         // loop over cones centered at different eta values and add energy from the calotower if it is within dR=0.5 from the cone axis
          for (int i = 0; i < 100; i++) {
             double coneEta = -4.95 + double(i)*0.1;
             double dPhi = deltaPhi(t->phi(), conePhi);
@@ -810,27 +660,20 @@ OffsetAnalysis::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
       for (int i = 0; i < 100; i++) {
          double coneEta = -4.95 + double(i)*0.1;
          
-         double effConeArea = towerAreaSum[i]/(0.5*0.5*M_PI);
+         double fracConeArea = towerAreaSum[i]/(0.5*0.5*M_PI);
          
-         h_EffConeArea->Fill(coneEta,effConeArea);
-         p_EffConeArea->Fill(coneEta,effConeArea);
+         h_FracConeArea->Fill(coneEta,fracConeArea);
+         p_FracConeArea->Fill(coneEta,fracConeArea);
          
          h_EinC5_Eta->Fill(coneEta,EinC5[i]);
          p_AvgEinC5->Fill(coneEta,EinC5[i]);
          
-//          h_EinC5HB_Eta->Fill(coneEta,EinC5HB[i]);
          p_AvgEinC5HB->Fill(coneEta,EinC5HB[i]);
-//          h_EinC5HE_Eta->Fill(coneEta,EinC5HE[i]);
          p_AvgEinC5HE->Fill(coneEta,EinC5HE[i]);
-//          h_EinC5HO_Eta->Fill(coneEta,EinC5HO[i]);
          p_AvgEinC5HO->Fill(coneEta,EinC5HO[i]);
-//          h_EinC5HFl_Eta->Fill(coneEta,EinC5HFl[i]);
          p_AvgEinC5HFl->Fill(coneEta,EinC5HFl[i]);
-//          h_EinC5HFs_Eta->Fill(coneEta,EinC5HFs[i]);
          p_AvgEinC5HFs->Fill(coneEta,EinC5HFs[i]);
-//          h_EinC5EB_Eta->Fill(coneEta,EinC5EB[i]);
          p_AvgEinC5EB->Fill(coneEta,EinC5EB[i]);
-//          h_EinC5EE_Eta->Fill(coneEta,EinC5EE[i]);
          p_AvgEinC5EE->Fill(coneEta,EinC5EE[i]);
          
          h_pTinC5_Eta->Fill(coneEta,pTinC5[i]);
@@ -846,40 +689,18 @@ OffsetAnalysis::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
    
          h_EinER_iEta->Fill(i-41,EinER[i]);
          p_AvgEinER->Fill(i-41,EinER[i]);
-//          h_ETinER_iEta->Fill(i-41,ETinER[i]);
-//          p_AvgETinER->Fill(i-41,ETinER[i]);
            
-//          h_EinERHB_iEta->Fill(i-41,EinERHB[i]);
          p_AvgEinERHB->Fill(i-41,EinERHB[i]);
-//          h_EinERHE_iEta->Fill(i-41,EinERHE[i]);
          p_AvgEinERHE->Fill(i-41,EinERHE[i]);
-//          h_EinERHO_iEta->Fill(i-41,EinERHO[i]);
          p_AvgEinERHO->Fill(i-41,EinERHO[i]);
-//          h_EinERHFl_iEta->Fill(i-41,EinERHFl[i]);
          p_AvgEinERHFl->Fill(i-41,EinERHFl[i]);
-//          h_EinERHFs_iEta->Fill(i-41,EinERHFs[i]);
          p_AvgEinERHFs->Fill(i-41,EinERHFs[i]);
-//          h_EinEREB_iEta->Fill(i-41,EinEREB[i]);
          p_AvgEinEREB->Fill(i-41,EinEREB[i]);
-//          h_EinEREE_iEta->Fill(i-41,EinEREE[i]);
          p_AvgEinEREE->Fill(i-41,EinEREE[i]);
-//            
-//          h_ETinERHB_iEta->Fill(i-41,ETinERHB[i]);
-//          p_AvgETinERHB->Fill(i-41,ETinERHB[i]);
-//          h_ETinERHE_iEta->Fill(i-41,ETinERHE[i]);
-//          p_AvgETinERHE->Fill(i-41,ETinERHE[i]);
-//          h_ETinERHO_iEta->Fill(i-41,ETinERHO[i]);
-//          p_AvgETinERHO->Fill(i-41,ETinERHO[i]);
-//          h_ETinERHFl_iEta->Fill(i-41,ETinERHFl[i]);
-//          p_AvgETinERHFl->Fill(i-41,ETinERHFl[i]);
-//          h_ETinERHFs_iEta->Fill(i-41,ETinERHFs[i]);
-//          p_AvgETinERHFs->Fill(i-41,ETinERHFs[i]);
-//          h_ETinEREB_iEta->Fill(i-41,ETinEREB[i]);
-//          p_AvgETinEREB->Fill(i-41,ETinEREB[i]);
-//          h_ETinEREE_iEta->Fill(i-41,ETinEREE[i]);
-//          p_AvgETinEREE->Fill(i-41,ETinEREE[i]);
       }
-   }
+   } // if ( doOffset_ )
+   // increment the event counter
+   nEvt++;
 }
 
 
@@ -894,79 +715,6 @@ OffsetAnalysis::endJob() {
    fillHistos(h_RecHitEinHFl_iEta, h_MeanRecHitEinHFl, h_RMSRecHitEinHFl);
    fillHistos(h_RecHitEinHFs_iEta, h_MeanRecHitEinHFs, h_RMSRecHitEinHFs);
    fillHistos(h_RecHitEinHO_iEta,  h_MeanRecHitEinHO,  h_RMSRecHitEinHO);
-
-   // save plots in PNG and/or EPS format
-   if (savePlots_ && (doPNG_ || doEPS_)) {
-      outputDir_ = outputDir_ + "/";
-      if (outputDir_ != "./") system(("/bin/mkdir -p " + outputDir_).c_str());
-	 cout<<"*************************************"<<endl;
-	 cout<<"====================================="<<endl;
-	 cout<<" Saving plots to '"<<outputDir_<<"'"<<endl;
-	 
-	 savePlot<TH1F>(h_RecHitEinEB, outputDir_,""); 
-	 savePlot<TH1F>(h_RecHitEinEE, outputDir_,"");
-	 savePlot<TH1F>(h_RecHitEinHB, outputDir_,""); 
-	 savePlot<TH1F>(h_RecHitEinHE, outputDir_,"");
-	 savePlot<TH1F>(h_RecHitEinHO, outputDir_,""); 
-	 savePlot<TH1F>(h_RecHitEinHFl, outputDir_,"");
-	 savePlot<TH1F>(h_RecHitEinHFs, outputDir_,""); 
-	 
-	 savePlot<TH2F>(h_RecHitEinEB_iEta, outputDir_,"");
-	 savePlot<TH2F>(h_RecHitEinEE_iEta, outputDir_,"");
-	 savePlot<TH2F>(h_RecHitEinHB_iEta, outputDir_,"");
-	 savePlot<TH2F>(h_RecHitEinHE_iEta, outputDir_,"");
-	 savePlot<TH2F>(h_RecHitEinHO_iEta, outputDir_,"");
-	 savePlot<TH2F>(h_RecHitEinHFl_iEta, outputDir_,"");
-	 savePlot<TH2F>(h_RecHitEinHFs_iEta, outputDir_,"");
-	 
-	 gStyle->SetOptStat(kFALSE);
-	 
-	 savePlot<TH1F>(h_MeanRecHitEinEB, outputDir_,"*PC");
-	 savePlot<TH1F>(h_MeanRecHitEinEE, outputDir_,"*PC");
-	 savePlot<TH1F>(h_MeanRecHitEinHB, outputDir_,"*PC");
-	 savePlot<TH1F>(h_MeanRecHitEinHE, outputDir_,"*PC");
-	 savePlot<TH1F>(h_MeanRecHitEinHFl, outputDir_,"*PC");
-	 savePlot<TH1F>(h_MeanRecHitEinHFs, outputDir_,"*PC");
-	 savePlot<TH1F>(h_MeanRecHitEinHO, outputDir_,"*PC");
-	 
-	 savePlot<TH1F>(h_RMSRecHitEinEB, outputDir_,"*PC");
-	 savePlot<TH1F>(h_RMSRecHitEinEE, outputDir_,"*PC");
-	 savePlot<TH1F>(h_RMSRecHitEinHB, outputDir_,"*PC");
-	 savePlot<TH1F>(h_RMSRecHitEinHE, outputDir_,"*PC");
-	 savePlot<TH1F>(h_RMSRecHitEinHFl, outputDir_,"*PC");
-	 savePlot<TH1F>(h_RMSRecHitEinHFs, outputDir_,"*PC");
-	 savePlot<TH1F>(h_RMSRecHitEinHO, outputDir_,"*PC");
-	  
-	 cout<<" Saving completed!"<<endl;
-	 cout<<"====================================="<<endl;
-	 cout<<"*************************************"<<endl;
-   }
-}
-  
-template <class histType> histType* OffsetAnalysis::savePlot(histType* fHist, const std::string& fOutputDir, const Option_t* fOption) {
-   
-   string name = fHist->GetName();
-   string pngName = name + ".png";
-   string saveName = fOutputDir + pngName;
-   
-   /*string title = fHist->GetTitle();
-   title = title + "  (CMSSW_1_8_4)";
-   fHist->SetTitle(title.c_str());*/
-   
-   TCanvas *c = new TCanvas("c","",1400,1000);
-   c->cd();
-
-   fHist->Draw(fOption);
-
-   c->SaveAs(saveName.c_str());
-   if (doEPS_) {
-      string epsName = name + ".eps";
-      saveName = fOutputDir + epsName;
-      c->SaveAs(saveName.c_str());
-   }
-   delete c;
-
-   return fHist;
 }
 
 void OffsetAnalysis::fillHistos(const TH2F* fHistIn, TH1F* fHistOut1, TH1F* fHistOut2) {
