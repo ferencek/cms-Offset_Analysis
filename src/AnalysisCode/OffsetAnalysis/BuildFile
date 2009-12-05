@@ -4,6 +4,7 @@
 <use name=FWCore/ParameterSet>
 <use name=FWCore/ServiceRegistry>
 <use name=DataFormats/JetReco>
+<use name=DataFormats/VertexReco>
 <use name=PhysicsTools/UtilAlgos>
 <use name=Geometry/CaloTopology>
 <use name=Geometry/CaloGeometry>
