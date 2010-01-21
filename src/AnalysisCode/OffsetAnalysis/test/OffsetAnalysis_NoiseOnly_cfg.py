@@ -7,13 +7,13 @@ process.load('Geometry.CaloEventSetup.CaloGeometry_cff')
 process.load('Geometry.CaloEventSetup.CaloTowerConstituents_cfi')
 
 process.load("FWCore.MessageService.MessageLogger_cfi")
-process.MessageLogger.cerr.FwkReport.reportEvery = 500
+process.MessageLogger.cerr.FwkReport.reportEvery = 1000
 process.MessageLogger.cerr.default.limit = 10
 
 process.options   = cms.untracked.PSet( wantSummary = cms.untracked.bool(True) )
 
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(10000)
+    input = cms.untracked.int32(-1)
 )
 # Input source
 process.source = cms.Source("PoolSource",

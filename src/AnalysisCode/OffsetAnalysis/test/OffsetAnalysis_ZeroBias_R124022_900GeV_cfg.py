@@ -7,27 +7,24 @@ process.load('Geometry.CaloEventSetup.CaloGeometry_cff')
 process.load('Geometry.CaloEventSetup.CaloTowerConstituents_cfi')
 
 process.load("FWCore.MessageService.MessageLogger_cfi")
-process.MessageLogger.cerr.FwkReport.reportEvery = 500
+process.MessageLogger.cerr.FwkReport.reportEvery = 1000
 process.MessageLogger.cerr.default.limit = 10
 
 process.options   = cms.untracked.PSet( wantSummary = cms.untracked.bool(True) )
 
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(10000)
+    input = cms.untracked.int32(-1)
 )
 # Input source
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
-        # /ZeroBias/BeamCommissioning09-rereco_GR09_P_V7_v1/RECO, Run 123596
-        '/store/data/BeamCommissioning09/ZeroBias/RECO/rereco_GR09_P_V7_v1/0099/FAB518C0-CCE2-DE11-AF25-002618943898.root',
-        '/store/data/BeamCommissioning09/ZeroBias/RECO/rereco_GR09_P_V7_v1/0099/F8B75B81-CDE2-DE11-A9EE-0026189438DE.root',
-        '/store/data/BeamCommissioning09/ZeroBias/RECO/rereco_GR09_P_V7_v1/0099/F869A7C0-CCE2-DE11-BE48-0026189438C1.root',
-        '/store/data/BeamCommissioning09/ZeroBias/RECO/rereco_GR09_P_V7_v1/0099/F2D6FC8F-CDE2-DE11-B492-0026189437ED.root',
+        # /ZeroBias/BeamCommissioning09-Dec14thReReco_v1/RECO, Run 124022
+        '/store/data/BeamCommissioning09/ZeroBias/RECO/Dec14thReReco_v1/0099/DCE74EBE-32E9-DE11-B810-0030487CDB2C.root'
     )
 )
 
 process.TFileService = cms.Service("TFileService",
-    fileName = cms.string('OffsetAnalysis_histos_ZeroBias_R123596.root')
+    fileName = cms.string('OffsetAnalysis_histos_ZeroBias_R124022_900GeV.root')
 )
 
 process.offsetAnalysis = cms.EDAnalyzer("OffsetAnalysis",
