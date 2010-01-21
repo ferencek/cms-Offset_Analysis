@@ -60,7 +60,7 @@ process.noScraping = cms.EDFilter("FilterOutScraping",
 
 process.offsetAnalysis = cms.EDAnalyzer("OffsetAnalysis",
     doOffset = cms.untracked.bool(True),
-    towerETcut = cms.untracked.double(0.5),
+    towerETcut = cms.untracked.double(0.3),
     #caloTowers = cms.untracked.string('towerMaker'),
     loopOverRecHits = cms.untracked.bool(False),
     recHitEvtLimit = cms.untracked.int32(2000),
